@@ -27,12 +27,18 @@ describe('auth-router', () => {
     it('(valid)', async (done) => {
       const password = "T3$tP4$$w0rd!";
       const reqBody = {
-        username: `TestUser_${d}`,
-        password: password,
+        Email: `TestUser_${d}`,
+        Password: password,
+        FirstName: 'Test',
+        LastName: 'User',
+        Location: '',
       };
       const expStatus = 201;
       const resBody = {
-        username: `TestUser_${d}`,
+        Email: `TestUser_${d}`,
+        FirstName: 'Test',
+        LastName: 'User',
+        Location: '',
       };
 
       const res = await supertest(server)
@@ -45,7 +51,7 @@ describe('auth-router', () => {
       expect(res.type).toBe('application/json');
       expect(res.body).toMatchObject(resBody);
       expect(res.body.id).toBeGreaterThanOrEqual(1);
-      expect(res.body.password).toMatch(/^\$2a\$\d{1,}\$.*/);
+      expect(res.body.Password).toMatch(/^\$2a\$\d{1,}\$.*/);
       done();
     });
 
@@ -70,14 +76,18 @@ describe('auth-router', () => {
     it('(valid)', async (done) => {
       const u = `TestUser_${d}`;
       const p = "T3$tP4$$w0rd!";
+      const f = "Test";
 
       const reqBody = {
-        username: u,
-        password: p,
+        Email: u,
+        Password: p,
+        FirstName: f,
+        LastName: 'User',
+        Location: '',
       };
       const expStatus = 200;
       const resBody = {
-        message: `Welcome ${u}!`
+        message: `Welcome ${f}!`
       };
 
       const res = await supertest(server)

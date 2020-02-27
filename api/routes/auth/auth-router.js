@@ -12,13 +12,13 @@ router.post('/register', jsonParser, (req, res) => {
   let userData = req.body;
   if (!process.env.NO_LOGGER) console.log(`TCL: register -> user\n`, userData);
 
-  if (!userData.username || !userData.password) {
+  if (!userData.Email || !userData.Password) {
     res.status(400).json({ message: `Required data missing` });
   } else {
-    const hash = bcrypt.hashSync(userData.password, passwordStrength);
+    const hash = bcrypt.hashSync(userData.Password, passwordStrength);
     if (!process.env.NO_LOGGER) console.log(`TCL: register -> hash =`, hash);
     
-    userData.password = hash;
+    userData.Password = hash;
 
     Users.createUser(userData)
       .then(saved => {
@@ -35,21 +35,21 @@ router.post('/login', jsonParser, (req, res) => {
   let userData = req.body;
   if (!process.env.NO_LOGGER) console.log(`TCL: login -> user input\n`, userData);
 
-  if (!userData.username || !userData.password) {
+  if (!userData.Email || !userData.Password) {
     res.status(400).json({ message: `Required data missing` });
   } else {
-    username = userData.username;
+    username = userData.Email;
     Users.readUserByName(username)
       .then(user => {
         if (!process.env.NO_LOGGER) console.log(`TCL: login -> user found\n`, user);
         if (user) {
-          const b = bcrypt.compareSync(userData.password, user.password);
+          const b = bcrypt.compareSync(userData.Password, user.Password);
           if (!process.env.NO_LOGGER) console.log(`TCL: login -> b =`, b);
           if (b) {
             const token = jwt.generateToken(user);
             if (!process.env.NO_LOGGER) console.log(`TCL: login -> token\n`, token);
             res.status(200).json({
-              message: `Welcome ${user.username}!`,
+              message: `Welcome ${user.FirstName}!`,
               token,
             });
           } else {
