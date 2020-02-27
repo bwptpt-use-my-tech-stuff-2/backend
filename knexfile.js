@@ -22,6 +22,17 @@ module.exports = {
     seeds: { directory: './data/seeds' },
   },
 
+  staging: {
+    client: 'sqlite3',
+    connection: { filename: './data/umts.stg.db3' },
+    useNullAsDefault: true,
+    migrations: {
+      directory: './data/migrations',
+      tableName: 'knex_migrations'
+    },
+    seeds: { directory: './data/seeds' },
+  },
+
   production: {
     //TODO if needed
     client: 'postgresql',
