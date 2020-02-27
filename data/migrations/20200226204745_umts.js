@@ -129,6 +129,18 @@ exports.up = function(knex) {
         .references('Stuff.id')
         .onUpdate('CASCADE')
         .onDelete('CASCADE');
+      tbl.decimal('PricePerHour')
+        .notNullable();
+      tbl.decimal('PricePerDay')
+        .notNullable();
+      tbl.integer('PickupCondition')
+        .notNullable()
+        .unsigned()
+        .references('Conditions.id');
+      tbl.integer('ReturnCondition')
+        .notNullable()
+        .unsigned()
+        .references('Conditions.id');
       tbl.primary(['rental_id', 'stuff_id']);
     })
     .createTable('User_Rental_Owners', tbl => {
