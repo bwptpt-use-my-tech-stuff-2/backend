@@ -1,31 +1,46 @@
 # Backend
 
-TODO Published URL goes here
+## [Live Published API URL](https://ls-bwptpt-use-my-tech-stuff-2.herokuapp.com/)
 
-## Auth
+## Table of Contents
 
-TODO
+- [Endpoints](#Endpoints)
+  - [Auth](#Auth)
+  - [Users](#Users)
+  - [Stuff](#Stuff)
+    - [Categories](#Categories)
+    - [Conditions](#Conditions)
+  - [Rentals](#Rentals)
+  - [Reviews](#Reviews)
 
-## Users
+![DB Design](./data/dbDesigner.net.png "DB Design")
 
-TODO
+## Endpoints
 
-## Stuff
-
-TODO
-
-### Categories
-
-TODO
-
-### Conditions
-
-TODO
-
-## Rentals
+### Auth
 
 TODO
 
-## Reviews
+### Users
+
+TODO
+
+### Stuff
+
+TODO
+
+#### Categories
+
+TODO
+
+#### Conditions
+
+TODO
+
+### Rentals
+
+TODO
+
+### Reviews
 
 TODO
