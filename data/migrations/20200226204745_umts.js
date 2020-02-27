@@ -56,6 +56,20 @@ exports.up = function(knex) {
       tbl.text('Title')
         .notNullable();
       tbl.text('Description');
+      tbl.integer('owner_id')
+        .notNullable()
+        .unsigned()
+        .references('Users.id')
+        // .onUpdate('CASCADE')
+        // .onDelete('CASCADE')
+        ;
+      tbl.integer('renter_id')
+        .notNullable()
+        .unsigned()
+        .references('Users.id')
+        // .onUpdate('CASCADE')
+        // .onDelete('CASCADE')
+        ;
       tbl.text('PickupLocation');
       tbl.datetime('PickupDateTime');
       tbl.text('ReturnLocation');
@@ -134,52 +148,18 @@ exports.up = function(knex) {
       tbl.decimal('PricePerDay')
         .notNullable();
       tbl.integer('PickupCondition')
-        .notNullable()
         .unsigned()
         .references('Conditions.id');
       tbl.integer('ReturnCondition')
-        .notNullable()
         .unsigned()
         .references('Conditions.id');
       tbl.primary(['rental_id', 'stuff_id']);
-    })
-    .createTable('User_Rental_Owners', tbl => {
-      tbl.integer('rental_id')
-        .notNullable()
-        .unsigned()
-        .references('Rentals.id')
-        .onUpdate('CASCADE')
-        .onDelete('CASCADE');
-      tbl.integer('owner_id')
-        .notNullable()
-        .unsigned()
-        .references('Users.id')
-        .onUpdate('CASCADE')
-        .onDelete('CASCADE');
-      tbl.primary(['rental_id', 'owner_id']);
-    })
-    .createTable('User_Rental_Renters', tbl => {
-      tbl.integer('rental_id')
-        .notNullable()
-        .unsigned()
-        .references('Rentals.id')
-        .onUpdate('CASCADE')
-        .onDelete('CASCADE');
-      tbl.integer('renter_id')
-        .notNullable()
-        .unsigned()
-        .references('Users.id')
-        .onUpdate('CASCADE')
-        .onDelete('CASCADE');
-      tbl.primary(['rental_id', 'renter_id']);
     })
     ;
 };
 
 exports.down = function(knex) {
   return knex.schema
-    .dropTableIfExists('User_Rental_Renters')
-    .dropTableIfExists('User_Rental_Owners')
     .dropTableIfExists('Rental_Stuff')
     .dropTableIfExists('User_FavoriteStuff')
     .dropTableIfExists('User_Stuff')
