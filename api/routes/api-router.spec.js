@@ -8,17 +8,18 @@ describe('api-router', () => {
   describe(`GET ${apiBase}`, () => {
 
     // http status code
-    it('should return 204 No Content', async (done) => {
+    it('should return 200 OK', async (done) => {
       const res = await supertest(server).get(apiBase);
-      expect(res.status).toBe(204);
+      expect(res.status).toBe(200);
       done();
     });
-  
+
     // shape of the response
-    it('body should be empty', async (done) => {
-      const body = {};
+    it('body should include documentation', async (done) => {
+      // const body = {};
       const res = await supertest(server).get(apiBase);
-      expect(res.body).toEqual(body);
+      // expect(res.body).toEqual(body);
+      expect(res.body.documentation).toMatch(/https:\/\/documenter\.getpostman\.com\/view\/.*/);
       done();
     });
 

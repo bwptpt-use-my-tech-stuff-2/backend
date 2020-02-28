@@ -13,14 +13,15 @@ const moment = require('moment');
 
 router.use('/auth', authRouter);
 router.use('/users', authenticate, usersRouter);
-// router.use('/categories', authenticate, categoriesRouter);
-// router.use('/conditions', authenticate, conditionsRouter);
+router.use('/categories', authenticate, categoriesRouter);
+router.use('/conditions', authenticate, conditionsRouter);
 // router.use('/stuff', authenticate, stuffRouter);
 // router.use('/rentals', authenticate, rentalsRouter);
 // router.use('/reviews', authenticate, reviewsRouter);
 
 router.get('/', (req, res) => {
-  res.sendStatus(204);  //No Content
+  //Direct to living API documentation
+  res.status(200).json({documentation: 'https://documenter.getpostman.com/view/2001469/SzKYQxE1?version=latest'});
 });
 
 module.exports = router;
