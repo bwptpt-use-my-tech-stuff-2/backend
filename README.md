@@ -1,6 +1,6 @@
 # Backend
 
-## [Live Published API URL](https://ls-bwptpt-use-my-tech-stuff-2.herokuapp.com/)
+## [Live Published API URL](https://ls-bwptpt-use-my-tech-stuff-2.herokuapp.com/api/)
 
 ## Table of Contents
 
