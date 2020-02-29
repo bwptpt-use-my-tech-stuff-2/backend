@@ -5,6 +5,7 @@ function auth(req, res, next) {
   if (!process.env.NO_LOGGER) console.log(`TCL: auth -> req.headers\n`, req.headers);
 
   const token = req.headers.authorization;
+  if (!process.env.NO_LOGGER) console.log(`TCL: auth -> token`, token);
   if (token) {
     jwt.verify(token, secrets.jwtSecret, (err, decodedToken) => {
       if (err) {
