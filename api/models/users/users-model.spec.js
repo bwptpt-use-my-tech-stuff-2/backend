@@ -11,15 +11,14 @@ const lA = ['Flintstone','Rubble'];
 const tT = `AutoTest_${targetDataUnit}`;
 let f, l, t;
 
-const bcrypt = require('bcryptjs');
-const passwordStrength = 8;
-const p = bcrypt.hashSync('Password'+d, passwordStrength);
+const p = "T3$tP4$$w0rd!";
 
 function random(min, max) {
   min = Math.ceil(min);
   max = Math.floor(max);
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
+
 
 describe(model, () => {
 
