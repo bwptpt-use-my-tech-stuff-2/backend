@@ -65,7 +65,7 @@ exports.up = function(knex) {
         // .onDelete('CASCADE')
         ;
       tbl.integer('renter_id')
-        .notNullable()
+        // .notNullable()
         .unsigned()
         .references('Users.id')
         // .onUpdate('CASCADE')
