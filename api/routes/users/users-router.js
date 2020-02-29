@@ -38,6 +38,13 @@ router.get('/:userRef', authenticate, (req, res) => {
         if (user) {
           if (!process.env.NO_LOGGER) console.log(`TCL: found:\n`, user);
           //TODO: Merge additional data associated with user
+          // Users.readUserBlahByUserId(user.id)
+          //   .then(userBlah => {
+          //     if (userBlah) {
+          //       newUser = { roles: userBlah, ...user };
+          //       user = newUser;
+          //     }
+          //   });
           res.status(200).json(user);
         } else {
           res.status(404).json({ message: `Could not get user with given id` });
@@ -54,6 +61,13 @@ router.get('/:userRef', authenticate, (req, res) => {
         if (user) {
           if (!process.env.NO_LOGGER) console.log(`TCL: found:\n`, user);
           //TODO: Merge additional data associated with user
+          // Users.readUserBlahByUserId(user.id)
+          //   .then(userBlah => {
+          //     if (userBlah) {
+          //       newUser = { roles: userBlah, ...user };
+          //       user = newUser;
+          //     }
+          //   });
           res.status(200).json(user);
         } else {
           res.status(404).json({ message: `Could not get user with given email` });
