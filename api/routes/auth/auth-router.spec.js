@@ -7,6 +7,7 @@ const json = 'application/json';
 const moment = require('moment');
 const d = moment().format("X");
 
+
 describe('auth-router', () => {
 
   const apiEndpointRegister = apiBase+'/register';
@@ -105,4 +106,24 @@ describe('auth-router', () => {
     });
 
   });
+
+
+  afterAll(async () => {
+    const model = 'users-model';
+    const targetTable = 'Users';
+    const Users = require(`../../models/users/${model}.js`);
+    const db = require('../../../data/dbConfig.js');
+
+    const data = await db(targetTable);
+    const len = data.length;
+
+    if (len>0) {
+      data.forEach(r => {
+        if (r.Email.includes('TestUser_')) {
+          Users.deleteUser(r.id);
+        };
+      })
+    };
+  });
+
 });
