@@ -93,7 +93,7 @@ describe(model, () => {
       done();
     });
 
-    it('should return specific records by provided text', async (done) => {
+    it('should return specific records by provided email', async (done) => {
       const data = await db(targetTable);
       const len = data.length;
 
@@ -101,7 +101,7 @@ describe(model, () => {
         const r = random(0, len-1);
         const data1 = data[r];
 
-        const data2 = await Users.readUserByName(data[r].Email);
+        const data2 = await Users.readUserByEmail(data[r].Email);
 
         expect(data2.id).toEqual(data1.id);
         expect(data2.Email).toEqual(data1.Email);

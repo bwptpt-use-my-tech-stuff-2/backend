@@ -4,7 +4,7 @@ module.exports = {
   createUser,
   readUsers,
   readUserById,
-  readUserByName,
+  readUserByEmail,
   updateUser,
   deleteUser,
 };
@@ -31,10 +31,10 @@ function readUserById(id) {
     return null;
   };
 };
-function readUserByName(username) {
-  if (username) {
+function readUserByEmail(emailAddress) {
+  if (emailAddress) {
     return db("users")
-      .where("Email", username)
+      .where("Email", emailAddress)
       .first();
   } else {
     return null;
