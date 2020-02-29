@@ -9,8 +9,6 @@ const stuffRouter = require('./stuff/stuff-router.js');
 const rentalsRouter = require('./rentals/rentals-router.js');
 const reviewsRouter = require('./reviews/reviews-router.js');
 
-const moment = require('moment');
-
 router.use('/auth', authRouter);
 router.use('/users', authenticate, usersRouter);
 router.use('/categories', authenticate, categoriesRouter);

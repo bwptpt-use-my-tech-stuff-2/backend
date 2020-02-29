@@ -16,9 +16,7 @@ describe('api-router', () => {
 
     // shape of the response
     it('body should include documentation', async (done) => {
-      // const body = {};
       const res = await supertest(server).get(apiBase);
-      // expect(res.body).toEqual(body);
       expect(res.body.documentation).toMatch(/https:\/\/documenter\.getpostman\.com\/view\/.*/);
       done();
     });
