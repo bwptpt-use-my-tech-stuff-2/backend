@@ -2,12 +2,21 @@ const router = require('express').Router();
 const Stuff = require('../../models/stuff/stuff-model.js');
 const authenticate = require('../../middleware/auth.js');
 
+const moment = require('moment');
+
 router.post('/', authenticate, (req, res) => {
   const stuffData = req.body;
 
-  if (!stuffData.Stuff) {
+  if (!stuffData.Title || !stuffData.category_id || !stuffData.condition_id || !stuffData.PricePerHour || !stuffData.PricePerDay) {
     res.status(400).json({ message: `Required data missing` });
   } else {
+
+    if (!stuffData.AddDate) {
+      const d = moment();
+      stuffData.AddDate = d.format("YYYY-MM-DD HH:mm:ss");
+    };
+    if (!stuffData.Available) stuffData.Available = true;
+
     Stuff.createStuff(stuffData)
       .then(addedStuff => {
         res.status(201).json(addedStuff);
