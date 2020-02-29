@@ -13,7 +13,7 @@ router.post('/', authenticate, (req, res) => {
         res.status(201).json(addedStuff);
       })
       .catch(err => {
-        res.status(500).json({ message: `Failed to create new stuff` });
+        res.status(500).json({ message: `Failed to create new stuff`, error: err });
       });
   };
 });
@@ -24,7 +24,7 @@ router.get('/', authenticate, (req, res) => {
       res.status(200).json(stuff);
     })
     .catch(err => {
-      res.status(500).json({ message: `Failed to get stuff` });
+      res.status(500).json({ message: `Failed to get stuff`, error: err });
     });
 });
 router.get('/:stuffRef', authenticate, (req, res) => {
@@ -37,13 +37,13 @@ router.get('/:stuffRef', authenticate, (req, res) => {
       .then(stuff => {
         if (stuff) {
           if (!process.env.NO_LOGGER) console.log(`TCL: found:\n`, stuff);
-          res.status(200).json({ stuffData: stuff });
+          res.status(200).json(stuff);
         } else {
           res.status(404).json({ message: `Could not get stuff with given id` });
         };
       })
       .catch(err => {
-        res.status(500).json({ message: `Failed to get stuff` });
+        res.status(500).json({ message: `Failed to get stuff`, error: err });
       });
   } else {
     stuffTitle = stuffRef;
@@ -52,56 +52,56 @@ router.get('/:stuffRef', authenticate, (req, res) => {
       .then(stuff => {
         if (stuff) {
           if (!process.env.NO_LOGGER) console.log(`TCL: found:\n`, stuff);
-          res.status(200).json({ stuffData: stuff });
+          res.status(200).json(stuff);
         } else {
           res.status(404).json({ message: `Could not get stuff with given name` });
         };
       })
       .catch(err => {
-        res.status(500).json({ message: `Failed to get stuff` });
+        res.status(500).json({ message: `Failed to get stuff`, error: err });
       });
   };
 });
 
 router.put('/:stuffId', authenticate, (req, res) => {
   const { stuffId } = req.params;
-  const uId = parseInt(stuffId, 10);
+  const id = parseInt(stuffId, 10);
   const stuffData = req.body;
 
-  if (!process.env.NO_LOGGER) console.log(`TCL: updateStuff(${uId})`);
+  if (!process.env.NO_LOGGER) console.log(`TCL: updateStuff(${id})`);
 
-  if (!uID > 0 || !stuffData.Stuff) {
+  if (!id > 0 || !stuffData.Stuff) {
     res.status(400).json({ message: `Required data missing` });
   } else {
-    Stuff.updateStuff(uId, stuffData)
+    Stuff.updateStuff(id, stuffData)
       .then(updatedStuff => {
         if (updatedStuff) {
-          res.status(200).json({ updatedStuff: uId });
+          res.status(200).json({ updatedStuff: id });
         } else {
           res.status(404).json({ message: `Could not get stuff with given id` });
         };
       })
       .catch(err => {
-        res.status(500).json({ message: `Failed to update stuff` });
+        res.status(500).json({ message: `Failed to update stuff`, error: err });
       });
   };
 });
 
 router.delete('/:stuffId', authenticate, (req, res) => {
   const { stuffId } = req.params;
-  const uId = parseInt(stuffId, 10);
-  if (!process.env.NO_LOGGER) console.log(`TCL: deleteStuff(${uId})`);
-  if (uId > 0) {
-    Stuff.deleteStuff(uId)
+  const id = parseInt(stuffId, 10);
+  if (!process.env.NO_LOGGER) console.log(`TCL: deleteStuff(${id})`);
+  if (id > 0) {
+    Stuff.deleteStuff(id)
       .then(removedStuff => {
         if (removedStuff) {
-          res.status(200).json({ removedStuff: uId });
+          res.status(200).json({ removedStuff: id });
         } else {
           res.status(404).json({ message: `Could not get stuff with given id` });
         };
       })
       .catch(err => {
-        res.status(500).json({ message: `Failed to delete stuff` });
+        res.status(500).json({ message: `Failed to delete stuff`, error: err });
       });
   };
 });

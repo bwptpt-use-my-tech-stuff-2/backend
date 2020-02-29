@@ -13,7 +13,7 @@ router.post('/', authenticate, (req, res) => {
         res.status(201).json(addedCondition);
       })
       .catch(err => {
-        res.status(500).json({ message: `Failed to create new condition` });
+        res.status(500).json({ message: `Failed to create new condition`, error: err });
       });
   };
 });
@@ -24,7 +24,7 @@ router.get('/', authenticate, (req, res) => {
       res.status(200).json(conditions);
     })
     .catch(err => {
-      res.status(500).json({ message: `Failed to get conditions` });
+      res.status(500).json({ message: `Failed to get conditions`, error: err });
     });
 });
 router.get('/:conditionRef', authenticate, (req, res) => {
@@ -37,13 +37,13 @@ router.get('/:conditionRef', authenticate, (req, res) => {
       .then(condition => {
         if (condition) {
           if (!process.env.NO_LOGGER) console.log(`TCL: found:\n`, condition);
-          res.status(200).json({ conditionData: condition });
+          res.status(200).json(condition);
         } else {
           res.status(404).json({ message: `Could not get condition with given id` });
         };
       })
       .catch(err => {
-        res.status(500).json({ message: `Failed to get condition` });
+        res.status(500).json({ message: `Failed to get condition`, error: err });
       });
   } else {
     conditionName = conditionRef;
@@ -52,13 +52,13 @@ router.get('/:conditionRef', authenticate, (req, res) => {
       .then(condition => {
         if (condition) {
           if (!process.env.NO_LOGGER) console.log(`TCL: found:\n`, condition);
-          res.status(200).json({ conditionData: condition });
+          res.status(200).json(condition);
         } else {
           res.status(404).json({ message: `Could not get condition with given name` });
         };
       })
       .catch(err => {
-        res.status(500).json({ message: `Failed to get condition` });
+        res.status(500).json({ message: `Failed to get condition`, error: err });
       });
   };
 });
@@ -82,7 +82,7 @@ router.put('/:conditionId', authenticate, (req, res) => {
         };
       })
       .catch(err => {
-        res.status(500).json({ message: `Failed to update condition` });
+        res.status(500).json({ message: `Failed to update condition`, error: err });
       });
   };
 });
@@ -101,7 +101,7 @@ router.delete('/:conditionId', authenticate, (req, res) => {
         };
       })
       .catch(err => {
-        res.status(500).json({ message: `Failed to delete condition` });
+        res.status(500).json({ message: `Failed to delete condition`, error: err });
       });
   };
 });

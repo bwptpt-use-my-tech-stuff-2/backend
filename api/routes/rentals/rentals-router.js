@@ -13,7 +13,7 @@ router.post('/', authenticate, (req, res) => {
         res.status(201).json(addedRental);
       })
       .catch(err => {
-        res.status(500).json({ message: `Failed to create new rental` });
+        res.status(500).json({ message: `Failed to create new rental`, error: err });
       });
   };
 });
@@ -37,13 +37,13 @@ router.get('/:rentalRef', authenticate, (req, res) => {
       .then(rental => {
         if (rental) {
           if (!process.env.NO_LOGGER) console.log(`TCL: found:\n`, rental);
-          res.status(200).json({ rentalData: rental });
+          res.status(200).json(rental);
         } else {
           res.status(404).json({ message: `Could not get rental with given id` });
         };
       })
       .catch(err => {
-        res.status(500).json({ message: `Failed to get rental` });
+        res.status(500).json({ message: `Failed to get rental`, error: err });
       });
   } else {
     rentalTitle = rentalRef;
@@ -52,37 +52,37 @@ router.get('/:rentalRef', authenticate, (req, res) => {
       .then(rental => {
         if (rental) {
           if (!process.env.NO_LOGGER) console.log(`TCL: found:\n`, rental);
-          res.status(200).json({ rentalData: rental });
+          res.status(200).json(rental);
         } else {
           res.status(404).json({ message: `Could not get rental with given name` });
         };
       })
       .catch(err => {
-        res.status(500).json({ message: `Failed to get rental` });
+        res.status(500).json({ message: `Failed to get rental`, error: err });
       });
   };
 });
 
 router.put('/:rentalId', authenticate, (req, res) => {
   const { rentalId } = req.params;
-  const uId = parseInt(rentalId, 10);
+  const id = parseInt(rentalId, 10);
   const rentalData = req.body;
 
-  if (!process.env.NO_LOGGER) console.log(`TCL: updateRental(${uId})`);
+  if (!process.env.NO_LOGGER) console.log(`TCL: updateRental(${id})`);
 
-  if (!uID > 0 || !rentalData.Rental) {
+  if (!id > 0 || !rentalData.Rental) {
     res.status(400).json({ message: `Required data missing` });
   } else {
-    Rentals.updateRental(uId, rentalData)
+    Rentals.updateRental(id, rentalData)
       .then(updatedRental => {
         if (updatedRental) {
-          res.status(200).json({ updatedRental: uId });
+          res.status(200).json({ updatedRental: id });
         } else {
           res.status(404).json({ message: `Could not get rental with given id` });
         };
       })
       .catch(err => {
-        res.status(500).json({ message: `Failed to update rental` });
+        res.status(500).json({ message: `Failed to update rental`, error: err });
       });
   };
 });
@@ -101,7 +101,7 @@ router.delete('/:rentalId', authenticate, (req, res) => {
         };
       })
       .catch(err => {
-        res.status(500).json({ message: `Failed to delete rental` });
+        res.status(500).json({ message: `Failed to delete rental`, error: err });
       });
   };
 });

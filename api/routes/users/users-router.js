@@ -13,7 +13,7 @@ router.post('/', authenticate, (req, res) => {
         res.status(201).json(addedUser);
       })
       .catch(err => {
-        res.status(500).json({ message: `Failed to create new user` });
+        res.status(500).json({ message: `Failed to create new user`, error: err });
       });
   };
 });
@@ -24,7 +24,7 @@ router.get('/', authenticate, (req, res) => {
       res.status(200).json(users);
     })
     .catch(err => {
-      res.status(500).json({ message: `Failed to get users` });
+      res.status(500).json({ message: `Failed to get users`, error: err });
     });
 });
 router.get('/:userRef', authenticate, (req, res) => {
@@ -43,7 +43,7 @@ router.get('/:userRef', authenticate, (req, res) => {
         };
       })
       .catch(err => {
-        res.status(500).json({ message: `Failed to get user` });
+        res.status(500).json({ message: `Failed to get user`, error: err });
       });
   } else {
     username = userRef;
@@ -58,26 +58,26 @@ router.get('/:userRef', authenticate, (req, res) => {
         };
       })
       .catch(err => {
-        res.status(500).json({ message: `Failed to get user` });
+        res.status(500).json({ message: `Failed to get user`, error: err });
       });
   };
 });
 
 router.delete('/:userId', authenticate, (req, res) => {
   const { userId } = req.params;
-  const uId = parseInt(userId, 10);
-  if (!process.env.NO_LOGGER) console.log(`TCL: deleteUser(${uId})`);
-  if (uId > 0) {
-    Users.deleteUser(uId)
+  const id = parseInt(userId, 10);
+  if (!process.env.NO_LOGGER) console.log(`TCL: deleteUser(${id})`);
+  if (id > 0) {
+    Users.deleteUser(id)
       .then(removedUser => {
         if (removedUser) {
-          res.status(200).json({ removedUser: uId });
+          res.status(200).json({ removedUser: id });
         } else {
           res.status(404).json({ message: `Could not get user with given id` });
         };
       })
       .catch(err => {
-        res.status(500).json({ message: `Failed to delete user` });
+        res.status(500).json({ message: `Failed to delete user`, error: err });
       });
   };
 });

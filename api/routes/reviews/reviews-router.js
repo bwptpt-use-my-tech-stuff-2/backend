@@ -13,7 +13,7 @@ router.post('/', authenticate, (req, res) => {
         res.status(201).json(addedReview);
       })
       .catch(err => {
-        res.status(500).json({ message: `Failed to create new review` });
+        res.status(500).json({ message: `Failed to create new review`, error: err });
       });
   };
 });
@@ -37,92 +37,77 @@ router.get('/:reviewRef', authenticate, (req, res) => {
       .then(review => {
         if (review) {
           if (!process.env.NO_LOGGER) console.log(`TCL: found:\n`, review);
-          res.status(200).json({ reviewData: review });
+          res.status(200).json(review);
         } else {
           res.status(404).json({ message: `Could not get review with given id` });
         };
       })
       .catch(err => {
-        res.status(500).json({ message: `Failed to get review` });
+        res.status(500).json({ message: `Failed to get review`, error: err });
       });
   };
 });
 
 router.get('/byRental/:rentalId', authenticate, (req, res) => {
-  const { reviewRef: rentalId } = req.params;
-  console.log(`TCL: get(/:reviewRef) =`, rentalId);
-  rId = parseInt(rentalId, 10);
-  if (rId > 0) {
-    if (!process.env.NO_LOGGER) console.log(`TCL: readReviewById(${rId})`);
-    Reviews.readReviewById(rId)
+  const { rentalId } = req.params;
+  console.log(`TCL: get(/byRental/:rentalId) =`, rentalId);
+  id = parseInt(rentalId, 10);
+  if (id > 0) {
+    if (!process.env.NO_LOGGER) console.log(`TCL: readReviewById(${id})`);
+    Reviews.readReviewByRentalId(id)
       .then(review => {
         if (review) {
           if (!process.env.NO_LOGGER) console.log(`TCL: found:\n`, review);
-          res.status(200).json({ reviewData: review });
+          res.status(200).json(review);
         } else {
           res.status(404).json({ message: `Could not get review with given id` });
         };
       })
       .catch(err => {
-        res.status(500).json({ message: `Failed to get review` });
-      });
-  } else {
-    reviewName = rentalId;
-    if (!process.env.NO_LOGGER) console.log(`TCL: readReviewByRentalId(${reviewName})`);
-    Reviews.readReviewByRentalId(reviewName)
-      .then(review => {
-        if (review) {
-          if (!process.env.NO_LOGGER) console.log(`TCL: found:\n`, review);
-          res.status(200).json({ reviewData: review });
-        } else {
-          res.status(404).json({ message: `Could not get review with given name` });
-        };
-      })
-      .catch(err => {
-        res.status(500).json({ message: `Failed to get review` });
+        res.status(500).json({ message: `Failed to get review`, error: err });
       });
   };
 });
 
 router.put('/:reviewId', authenticate, (req, res) => {
   const { reviewId } = req.params;
-  const uId = parseInt(reviewId, 10);
+  const id = parseInt(reviewId, 10);
   const reviewData = req.body;
 
-  if (!process.env.NO_LOGGER) console.log(`TCL: updateReview(${uId})`);
+  if (!process.env.NO_LOGGER) console.log(`TCL: updateReview(${id})`);
 
-  if (!uID > 0 || !reviewData.Review) {
+  if (!id > 0 || !reviewData.Review) {
     res.status(400).json({ message: `Required data missing` });
   } else {
-    Reviews.updateReview(uId, reviewData)
+    Reviews.updateReview(id, reviewData)
       .then(updatedReview => {
         if (updatedReview) {
-          res.status(200).json({ updatedReview: uId });
+          res.status(200).json({ updatedReview: id });
         } else {
           res.status(404).json({ message: `Could not get review with given id` });
         };
       })
       .catch(err => {
-        res.status(500).json({ message: `Failed to update review` });
+        res.status(500).json({ message: `Failed to update review`, error: err });
       });
   };
 });
 
 router.delete('/:reviewId', authenticate, (req, res) => {
   const { reviewId } = req.params;
-  const uId = parseInt(reviewId, 10);
-  if (!process.env.NO_LOGGER) console.log(`TCL: deleteReview(${uId})`);
-  if (uId > 0) {
-    Reviews.deleteReview(uId)
+  const id = parseInt(reviewId, 10);
+  if (!process.env.NO_LOGGER) console.log(`TCL: deleteReview(${id})`);
+  if (id > 0) {
+    Reviews.deleteReview(id)
       .then(removedReview => {
         if (removedReview) {
-          res.status(200).json({ removedReview: uId });
+          res.status(200).json({ removedReview: id });
         } else {
           res.status(404).json({ message: `Could not get review with given id` });
         };
       })
       .catch(err => {
-        res.status(500).json({ message: `Failed to delete review` });
+        res.status(500).json({ message: `Failed to delete review`, error: err });
       });
   };
 });
