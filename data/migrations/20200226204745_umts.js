@@ -41,7 +41,8 @@ exports.up = function(knex) {
         .notNullable()
         .unsigned()
         .references('Conditions.id');
-      tbl.datetime('AddDate');
+      tbl.datetime('AddDate')
+        .notNullable();
       tbl.decimal('PricePerHour')
         .notNullable();
       tbl.decimal('PricePerDay')
