@@ -14,6 +14,7 @@ function random(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
+
 describe(model, () => {
 
   let userCount = 0;
@@ -21,6 +22,7 @@ describe(model, () => {
   beforeAll(async () => {
     userCount = await (await db('Users')).length;
   });
+
 
   describe('create', () => {
 

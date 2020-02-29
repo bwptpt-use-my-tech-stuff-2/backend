@@ -15,6 +15,7 @@ function random(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
+
 describe(model, () => {
 
   let categoryCount = 0;
@@ -24,6 +25,7 @@ describe(model, () => {
     categoryCount = await (await db('Categories')).length;
     conditionCount = await (await db('Conditions')).length;
   });
+
 
   describe('create', () => {
 
