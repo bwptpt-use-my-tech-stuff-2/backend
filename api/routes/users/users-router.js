@@ -5,7 +5,7 @@ const authenticate = require('../../middleware/auth.js');
 router.post('/', authenticate, (req, res) => {
   const userData = req.body;
 
-  if (!userData.username || !userData.password) {
+  if (!userData.Email || !userData.Password) {
     res.status(400).json({ message: `Required data missing` });
   } else {
     Users.createUser(userData)
@@ -37,7 +37,8 @@ router.get('/:userRef', authenticate, (req, res) => {
       .then(user => {
         if (user) {
           if (!process.env.NO_LOGGER) console.log(`TCL: found:\n`, user);
-          res.status(200).json({ userData: user });
+          //TODO: Merge additional data associated with user
+          res.status(200).json(user);
         } else {
           res.status(404).json({ message: `Could not get user with given id` });
         };
@@ -46,20 +47,47 @@ router.get('/:userRef', authenticate, (req, res) => {
         res.status(500).json({ message: `Failed to get user`, error: err });
       });
   } else {
-    username = userRef;
-    if (!process.env.NO_LOGGER) console.log(`TCL: readUserByName(${username})`);
-    Users.readUserByName(username)
+    email = userRef;
+    if (!process.env.NO_LOGGER) console.log(`TCL: readUserByEmail(${email})`);
+    Users.readUserByEmail(email)
       .then(user => {
         if (user) {
           if (!process.env.NO_LOGGER) console.log(`TCL: found:\n`, user);
-          res.status(200).json({ userData: user });
+          //TODO: Merge additional data associated with user
+          res.status(200).json(user);
         } else {
-          res.status(404).json({ message: `Could not get user with given name` });
+          res.status(404).json({ message: `Could not get user with given email` });
         };
       })
       .catch(err => {
         res.status(500).json({ message: `Failed to get user`, error: err });
       });
+  };
+});
+
+router.put('/:userId', authenticate, (req, res) => {
+  const { userId } = req.params;
+  const id = parseInt(userId, 10);
+  const userData = req.body;
+
+  if (!process.env.NO_LOGGER) console.log(`TCL: updateUser(${id})`);
+
+  if (!userData.Email && !userData.Password && !userData.FirstName && !userData.LastName && !userData.Location) {
+    res.status(400).json({ message: `Required data missing` });
+  } else {
+    if (id > 0) {
+      Users.updateUser(id, userData)
+        .then(removedUser => {
+          if (removedUser) {
+            res.status(200).json({ updatedUser: id });
+          } else {
+            res.status(404).json({ message: `Could not get user with given id` });
+          };
+        })
+        .catch(err => {
+          res.status(500).json({ message: `Failed to update user`, error: err });
+        });
+    };
   };
 });
 
