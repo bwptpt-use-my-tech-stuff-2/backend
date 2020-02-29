@@ -13,9 +13,9 @@ router.use('/auth', authRouter);
 router.use('/users', authenticate, usersRouter);
 router.use('/categories', authenticate, categoriesRouter);
 router.use('/conditions', authenticate, conditionsRouter);
-// router.use('/stuff', authenticate, stuffRouter);
-// router.use('/rentals', authenticate, rentalsRouter);
-// router.use('/reviews', authenticate, reviewsRouter);
+router.use('/stuff', authenticate, stuffRouter);
+router.use('/rentals', authenticate, rentalsRouter);
+router.use('/reviews', authenticate, reviewsRouter);
 
 router.get('/', (req, res) => {
   //Direct to living API documentation
