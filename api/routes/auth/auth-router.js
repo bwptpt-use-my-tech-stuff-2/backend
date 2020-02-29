@@ -38,8 +38,8 @@ router.post('/login', jsonParser, (req, res) => {
   if (!userData.Email || !userData.Password) {
     res.status(400).json({ message: `Required data missing` });
   } else {
-    username = userData.Email;
-    Users.readUserByName(username)
+    email = userData.Email;
+    Users.readUserByEmail(email)
       .then(user => {
         if (!process.env.NO_LOGGER) console.log(`TCL: login -> user found\n`, user);
         if (user) {
