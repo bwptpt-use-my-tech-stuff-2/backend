@@ -6,10 +6,11 @@
   "scripts": {
     "test": "cross-env NODE_ENV=testing jest",
     "test:watch": "cross-env NODE_ENV=testing NO_LOGGER=true jest --watch --runInBand --detectOpenHandles",
+    "test:watch:troubleshoot": "cross-env NODE_ENV=testing NO_LOGGER=true jest --watch --runInBand --detectOpenHandles",
     "test:watch:withLogs": "cross-env NODE_ENV=testing jest --watch --runInBand --detectOpenHandles",
-    "server": "nodemon index.js",
-    "server:testing": "cross-env NODE_ENV=testing nodemon index.js",
-    "start": "node index.js"
+    "server": "nodemon -r dotenv-safe/config index.js",
+    "server:testing": "cross-env NODE_ENV=testing nodemon -r dotenv-safe/config index.js",
+    "start": "node -r dotenv-safe/config index.js"
   },
   "jest": {
     "testEnvironment": "node"
@@ -36,7 +37,7 @@
     "connect-session-knex": "^1.5.0",
     "cors": "^2.8.5",
     "cross-env": "^7.0.0",
-    "dotenv": "^8.2.0",
+    "dotenv-safe": "^8.2.0",
     "express": "^4.17.1",
     "express-session": "^1.17.0",
     "helmet": "^3.21.2",
