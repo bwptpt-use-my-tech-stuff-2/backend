@@ -65,18 +65,18 @@ router.get('/:conditionRef', authenticate, (req, res) => {
 
 router.put('/:conditionId', authenticate, (req, res) => {
   const { conditionId } = req.params;
-  const uId = parseInt(conditionId, 10);
+  const id = parseInt(conditionId, 10);
   const conditionData = req.body;
 
-  if (!process.env.NO_LOGGER) console.log(`TCL: updateCondition(${uId})`);
+  if (!process.env.NO_LOGGER) console.log(`TCL: updateCondition(${id})`);
 
-  if (!uID > 0 || !conditionData.Condition) {
+  if (!id > 0 || !conditionData.Condition) {
     res.status(400).json({ message: `Required data missing` });
   } else {
-    Conditions.updateCondition(uId, conditionData)
+    Conditions.updateCondition(id, conditionData)
       .then(updatedCondition => {
         if (updatedCondition) {
-          res.status(200).json({ updatedCondition: uId });
+          res.status(200).json({ updatedCondition: id });
         } else {
           res.status(404).json({ message: `Could not get condition with given id` });
         };
@@ -89,13 +89,13 @@ router.put('/:conditionId', authenticate, (req, res) => {
 
 router.delete('/:conditionId', authenticate, (req, res) => {
   const { conditionId } = req.params;
-  const uId = parseInt(conditionId, 10);
-  if (!process.env.NO_LOGGER) console.log(`TCL: deleteCondition(${uId})`);
-  if (uId > 0) {
-    Conditions.deleteCondition(uId)
+  const id = parseInt(conditionId, 10);
+  if (!process.env.NO_LOGGER) console.log(`TCL: deleteCondition(${id})`);
+  if (id > 0) {
+    Conditions.deleteCondition(id)
       .then(removedCondition => {
         if (removedCondition) {
-          res.status(200).json({ removedCondition: uId });
+          res.status(200).json({ removedCondition: id });
         } else {
           res.status(404).json({ message: `Could not get condition with given id` });
         };
