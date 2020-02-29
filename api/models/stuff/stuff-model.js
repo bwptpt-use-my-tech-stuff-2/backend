@@ -44,6 +44,7 @@ function readStuffByTitle(stuffTitle) {
 function updateStuff(id, stuffUpdate) {
   if (id && stuffUpdate) {
     return db("Stuff")
+      .where("id", id)
       .update(stuffUpdate)
       .then(count => (count > 0 ? this.readStuffById(id) : null));
   } else {
@@ -55,7 +56,8 @@ function deleteStuff(id) {
   if (id) {
     return db("Stuff")
       .where("id", id)
-      .del();
+      .del()
+      .then(count => (count > 0 ? id : null));
   } else {
     return null;
   };

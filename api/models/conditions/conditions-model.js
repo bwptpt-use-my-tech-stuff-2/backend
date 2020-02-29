@@ -44,6 +44,7 @@ function readConditionByName(conditionName) {
 function updateCondition(id, conditionUpdate) {
   if (id && conditionUpdate) {
     return db("Conditions")
+      .where("id", id)
       .update(conditionUpdate)
       .then(count => (count > 0 ? this.readConditionById(id) : null));
   } else {
@@ -55,7 +56,8 @@ function deleteCondition(id) {
   if (id) {
     return db("Conditions")
       .where("id", id)
-      .del();
+      .del()
+      .then(count => (count > 0 ? id : null));
   } else {
     return null;
   };

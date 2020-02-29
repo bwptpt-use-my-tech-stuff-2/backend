@@ -44,6 +44,7 @@ function readReviewByRentalId(rental_id) {
 function updateReview(id, reviewUpdate) {
   if (id && reviewUpdate) {
     return db("Reviews")
+      .where("id", id)
       .update(reviewUpdate)
       .then(count => (count > 0 ? this.readReviewById(id) : null));
   } else {
@@ -55,7 +56,8 @@ function deleteReview(id) {
   if (id) {
     return db("Reviews")
       .where("id", id)
-      .del();
+      .del()
+      .then(count => (count > 0 ? id : null));
   } else {
     return null;
   };

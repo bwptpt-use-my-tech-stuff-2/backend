@@ -44,6 +44,7 @@ function readRentalByTitle(rentalTitle) {
 function updateRental(id, rentalUpdate) {
   if (id && rentalUpdate) {
     return db("Rentals")
+      .where("id", id)
       .update(rentalUpdate)
       .then(count => (count > 0 ? this.readRentalById(id) : null));
   } else {
@@ -55,7 +56,8 @@ function deleteRental(id) {
   if (id) {
     return db("Rentals")
       .where("id", id)
-      .del();
+      .del()
+      .then(count => (count > 0 ? id : null));
   } else {
     return null;
   };

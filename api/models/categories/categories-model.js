@@ -44,6 +44,7 @@ function readCategoryByName(categoryName) {
 function updateCategory(id, categoryUpdate) {
   if (id && categoryUpdate) {
     return db("Categories")
+      .where("id", id)
       .update(categoryUpdate)
       .then(count => (count > 0 ? this.readCategoryById(id) : null));
   } else {
@@ -55,7 +56,8 @@ function deleteCategory(id) {
   if (id) {
     return db("Categories")
       .where("id", id)
-      .del();
+      .del()
+      .then(count => (count > 0 ? id : null));
   } else {
     return null;
   };

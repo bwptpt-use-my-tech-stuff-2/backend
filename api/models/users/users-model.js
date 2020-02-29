@@ -44,6 +44,7 @@ function readUserByName(username) {
 function updateUser(id, userUpdate) {
   if (id && userUpdate) {
     return db("users")
+      .where("id", id)
       .update(userUpdate)
       .then(count => (count > 0 ? this.readUserById(id) : null));
   } else {
@@ -55,7 +56,8 @@ function deleteUser(id) {
   if (id) {
     return db("users")
       .where("id", id)
-      .del();
+      .del()
+      .then(count => (count > 0 ? id : null));
   } else {
     return null;
   };
