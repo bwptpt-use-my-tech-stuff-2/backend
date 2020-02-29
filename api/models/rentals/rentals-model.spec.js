@@ -19,14 +19,16 @@ describe(model, () => {
 
   let userCount = 0;
 
-  beforeAll(async () => {
+  beforeAll(async (done) => {
     userCount = await (await db('Users')).length;
+
+    done();
   });
 
 
   describe('create', () => {
 
-    it('should insert and return provided record', async () => {
+    it('should insert and return provided record', async (done) => {
       if (userCount>0) {
         const data1 = await db(targetTable);
         const len = data1.length;
@@ -41,6 +43,8 @@ describe(model, () => {
       } else {
         expect(userCount).toBeGreaterThan(0);
       };
+
+      done();
     });
 
   });
@@ -48,7 +52,7 @@ describe(model, () => {
 
   describe('read', () => {
 
-    it('should return all records', async () => {
+    it('should return all records', async (done) => {
       const data1 = await db(targetTable);
       const len = data1.length;
 
@@ -60,9 +64,11 @@ describe(model, () => {
       } else {
         expect(len).toBeGreaterThan(0);
       };
+
+      done();
     });
 
-    it('should return specific records by provided id', async () => {
+    it('should return specific records by provided id', async (done) => {
       const data = await db(targetTable);
       const len = data.length;
 
@@ -77,9 +83,11 @@ describe(model, () => {
       } else {
         expect(len).toBeGreaterThan(0);
       };
+
+      done();
     });
 
-    it('should return specific records by provided text', async () => {
+    it('should return specific records by provided text', async (done) => {
       const data = await db(targetTable);
       const len = data.length;
 
@@ -94,6 +102,8 @@ describe(model, () => {
       } else {
         expect(len).toBeGreaterThan(0);
       };
+
+      done();
     });
 
   });
@@ -101,7 +111,7 @@ describe(model, () => {
 
   describe('update', () => {
 
-    it('change inserted test record', async () => {
+    it('change inserted test record', async (done) => {
       if (userCount>0) {
         const t0 = `${t}_U`;
 
@@ -118,6 +128,8 @@ describe(model, () => {
       } else {
         expect(userCount).toBeGreaterThan(0);
       };
+
+      done();
     });
 
   });
@@ -125,7 +137,7 @@ describe(model, () => {
 
   describe('delete', () => {
 
-    it('delete inserted test record', async () => {
+    it('delete inserted test record', async (done) => {
       if (userCount>0) {
         const t0 = `${t}_D`;
 
@@ -140,12 +152,14 @@ describe(model, () => {
       } else {
         expect(userCount).toBeGreaterThan(0);
       };
+
+      done();
     });
 
   });
 
 
-  afterAll(async () => {
+  afterAll(async (done) => {
     const data = await db(targetTable);
     const len = data.length;
 
@@ -156,6 +170,8 @@ describe(model, () => {
         };
       })
     };
+
+    done();
   });
 
 });

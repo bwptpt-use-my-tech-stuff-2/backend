@@ -22,6 +22,7 @@ describe('auth-router', () => {
       expect(res.type).toBe(json);
       expect(res.body).toEqual(resBody);
       expect(res.body.user).toBeUndefined();
+
       done();
     });
 
@@ -53,6 +54,7 @@ describe('auth-router', () => {
       expect(res.body).toMatchObject(resBody);
       expect(res.body.id).toBeGreaterThanOrEqual(1);
       expect(res.body.Password).toMatch(/^\$2a\$\d{1,}\$.*/);
+
       done();
     });
 
@@ -71,6 +73,7 @@ describe('auth-router', () => {
       expect(res.type).toBe(json);
       expect(res.body).toEqual(resBody);
       expect(res.body.user).toBeUndefined();
+
       done();
     });
 
@@ -102,13 +105,14 @@ describe('auth-router', () => {
       expect(res.body).toMatchObject(resBody);
       expect(res.body.token)
         .toMatch(/[\w|-]{1,}\.{1}[\w|-]{1,}\.{1}[\w|-]{1,}/);
+
       done();
     });
 
   });
 
 
-  afterAll(async () => {
+  afterAll(async (done) => {
     const model = 'users-model';
     const targetTable = 'Users';
     const Users = require(`../../models/users/${model}.js`);
@@ -124,6 +128,8 @@ describe('auth-router', () => {
         };
       })
     };
+
+    done();
   });
 
 });

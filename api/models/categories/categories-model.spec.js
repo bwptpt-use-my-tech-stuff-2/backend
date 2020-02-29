@@ -18,7 +18,7 @@ describe(model, () => {
 
   describe('create', () => {
 
-    it('should insert and return provided record', async () => {
+    it('should insert and return provided record', async (done) => {
       const data1 = await db(targetTable);
       const len = data1.length;
 
@@ -29,9 +29,11 @@ describe(model, () => {
 
       const data2 = await db(targetTable);
       expect(data2).toHaveLength(len+1);
+
+      done();
     });
 
-    it('should prevent duplicate records', async () => {
+    it('should prevent duplicate records', async (done) => {
       const data1 = await db(targetTable);
       const len = data1.length;
 
@@ -48,6 +50,8 @@ describe(model, () => {
 
       const data2 = await db(targetTable);
       expect(data2).toHaveLength(len+1);
+
+      done();
     });
 
   });
@@ -55,7 +59,7 @@ describe(model, () => {
 
   describe('read', () => {
 
-    it('should return all records', async () => {
+    it('should return all records', async (done) => {
       const data1 = await db(targetTable);
       const len = data1.length;
 
@@ -67,9 +71,11 @@ describe(model, () => {
       } else {
         expect(len).toBeGreaterThan(0);
       };
+
+      done();
     });
 
-    it('should return specific records by provided id', async () => {
+    it('should return specific records by provided id', async (done) => {
       const data = await db(targetTable);
       const len = data.length;
 
@@ -84,9 +90,11 @@ describe(model, () => {
       } else {
         expect(len).toBeGreaterThan(0);
       };
+
+      done();
     });
 
-    it('should return specific records by provided text', async () => {
+    it('should return specific records by provided text', async (done) => {
       const data = await db(targetTable);
       const len = data.length;
 
@@ -101,6 +109,8 @@ describe(model, () => {
       } else {
         expect(len).toBeGreaterThan(0);
       };
+
+      done();
     });
 
   });
@@ -108,7 +118,7 @@ describe(model, () => {
 
   describe('update', () => {
 
-    it('change inserted test record', async () => {
+    it('change inserted test record', async (done) => {
       const c = `AutoTest_${targetDataUnit}_${d}_U`;
 
       await Categories.createCategory({ Category: c })
@@ -120,6 +130,8 @@ describe(model, () => {
             await expect(d2).toEqual(d1);
           });
         });
+
+      done();
     });
 
   });
@@ -127,7 +139,7 @@ describe(model, () => {
 
   describe('delete', () => {
 
-    it('delete inserted test record', async () => {
+    it('delete inserted test record', async (done) => {
       const c = `AutoTest_${targetDataUnit}_${d}_D`;
 
       await Categories.createCategory({ Category: c })
@@ -138,12 +150,14 @@ describe(model, () => {
             await expect(d2).toEqual(d1);
           });
         });
+
+      done();
     });
 
   });
 
 
-  afterAll(async () => {
+  afterAll(async (done) => {
     const data = await db(targetTable);
     const len = data.length;
 
@@ -154,6 +168,8 @@ describe(model, () => {
         };
       })
     };
+
+    done();
   });
 
 });

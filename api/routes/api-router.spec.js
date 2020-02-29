@@ -11,6 +11,7 @@ describe('api-router', () => {
     it('should return 200 OK', async (done) => {
       const res = await supertest(server).get(apiBase);
       expect(res.status).toBe(200);
+
       done();
     });
 
@@ -18,6 +19,7 @@ describe('api-router', () => {
     it('body should include documentation', async (done) => {
       const res = await supertest(server).get(apiBase);
       expect(res.body.documentation).toMatch(/https:\/\/documenter\.getpostman\.com\/view\/.*/);
+
       done();
     });
 
