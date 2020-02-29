@@ -79,20 +79,22 @@ router.put('/:stuffId', authenticate, (req, res) => {
 
   if (!process.env.NO_LOGGER) console.log(`TCL: updateStuff(${id})`);
 
-  if (!id > 0 || !stuffData.Stuff) {
+  if (!stuffData.Title && !stuffData.Description && !stuffData.category_id && !stuffData.condition_id && !stuffData.PricePerHour && !stuffData.PricePerDay && !stuffData.AddDate && !stuffData.Available && !stuffData.ImagePath) {
     res.status(400).json({ message: `Required data missing` });
   } else {
-    Stuff.updateStuff(id, stuffData)
-      .then(updatedStuff => {
-        if (updatedStuff) {
-          res.status(200).json({ updatedStuff: id });
-        } else {
-          res.status(404).json({ message: `Could not get stuff with given id` });
-        };
-      })
-      .catch(err => {
-        res.status(500).json({ message: `Failed to update stuff`, error: err });
-      });
+    if (id > 0) {
+      Stuff.updateStuff(id, stuffData)
+        .then(updatedStuff => {
+          if (updatedStuff) {
+            res.status(200).json({ updatedStuff: id });
+          } else {
+            res.status(404).json({ message: `Could not get stuff with given id` });
+          };
+        })
+        .catch(err => {
+          res.status(500).json({ message: `Failed to update stuff`, error: err });
+        });
+    };
   };
 });
 
