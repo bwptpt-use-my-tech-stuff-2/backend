@@ -5,9 +5,12 @@ const authenticate = require('../../middleware/auth.js');
 router.post('/', authenticate, (req, res) => {
   const rentalData = req.body;
 
-  if (!rentalData.Rental) {
+  if (!rentalData.Title || !rentalData.owner_id) {
     res.status(400).json({ message: `Required data missing` });
   } else {
+    if (!rentalData.Paid) rentalData.Paid = false;
+    if (!rentalData.Returned) rentalData.Returned = false;
+
     Rentals.createRental(rentalData)
       .then(addedRental => {
         res.status(201).json(addedRental);
@@ -70,20 +73,22 @@ router.put('/:rentalId', authenticate, (req, res) => {
 
   if (!process.env.NO_LOGGER) console.log(`TCL: updateRental(${id})`);
 
-  if (!id > 0 || !rentalData.Rental) {
+  if (!rentalData.Title && !rentalData.Description && !rentalData.PickupLocation && !rentalData.ReturnLocation && !rentalData.ReturnDateTime && !rentalData.Duration && !rentalData.Term && !rentalData.Paid && !rentalData.Returned && !rentalData.RentalTotalCost) {
     res.status(400).json({ message: `Required data missing` });
   } else {
-    Rentals.updateRental(id, rentalData)
-      .then(updatedRental => {
-        if (updatedRental) {
-          res.status(200).json({ updatedRental: id });
-        } else {
-          res.status(404).json({ message: `Could not get rental with given id` });
-        };
-      })
-      .catch(err => {
-        res.status(500).json({ message: `Failed to update rental`, error: err });
-      });
+    if (id > 0) {
+      Rentals.updateRental(id, rentalData)
+        .then(updatedRental => {
+          if (updatedRental) {
+            res.status(200).json({ updatedRental: id });
+          } else {
+            res.status(404).json({ message: `Could not get rental with given id` });
+          };
+        })
+        .catch(err => {
+          res.status(500).json({ message: `Failed to update rental`, error: err });
+        });
+    };
   };
 });
 

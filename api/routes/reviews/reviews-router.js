@@ -5,7 +5,7 @@ const authenticate = require('../../middleware/auth.js');
 router.post('/', authenticate, (req, res) => {
   const reviewData = req.body;
 
-  if (!reviewData.Review) {
+  if (!reviewData.rental_id) {
     res.status(400).json({ message: `Required data missing` });
   } else {
     Reviews.createReview(reviewData)
@@ -76,20 +76,22 @@ router.put('/:reviewId', authenticate, (req, res) => {
 
   if (!process.env.NO_LOGGER) console.log(`TCL: updateReview(${id})`);
 
-  if (!id > 0 || !reviewData.Review) {
+  if (!reviewData.OwnerRatingOfRenter && !reviewData.RenterRatingOfOwner && !reviewData.OwnerFeedback && !reviewData.RenterFeedback) {
     res.status(400).json({ message: `Required data missing` });
   } else {
-    Reviews.updateReview(id, reviewData)
-      .then(updatedReview => {
-        if (updatedReview) {
-          res.status(200).json({ updatedReview: id });
-        } else {
-          res.status(404).json({ message: `Could not get review with given id` });
-        };
-      })
-      .catch(err => {
-        res.status(500).json({ message: `Failed to update review`, error: err });
-      });
+    if (id > 0) {
+      Reviews.updateReview(id, reviewData)
+        .then(updatedReview => {
+          if (updatedReview) {
+            res.status(200).json({ updatedReview: id });
+          } else {
+            res.status(404).json({ message: `Could not get review with given id` });
+          };
+        })
+        .catch(err => {
+          res.status(500).json({ message: `Failed to update review`, error: err });
+        });
+    };
   };
 });
 

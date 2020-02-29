@@ -71,21 +71,23 @@ router.put('/:categoryId', authenticate, (req, res) => {
   if (!process.env.NO_LOGGER) console.log(`TCL: updateCategory(${id})`);
   if (!process.env.NO_LOGGER) console.log(`TCL: categoryData:\n`, categoryData);
 
-  if (!id > 0 || !categoryData.Category) {
+  if (!categoryData.Category) {
     res.status(400).json({ message: `Required data missing` });
   } else {
-    Categories.updateCategory(id, categoryData)
-      .then(updatedCategory => {
-        console.log(`TCL: updatedCategory`, updatedCategory);
-        if (updatedCategory) {
-          res.status(200).json({ updatedCategory: id });
-        } else {
-          res.status(404).json({ message: `Could not get category with given id` });
-        };
-      })
-      .catch(err => {
-        res.status(500).json({ message: `Failed to update category`, error: err });
-      });
+    if (id > 0) {
+      Categories.updateCategory(id, categoryData)
+        .then(updatedCategory => {
+          console.log(`TCL: updatedCategory`, updatedCategory);
+          if (updatedCategory) {
+            res.status(200).json({ updatedCategory: id });
+          } else {
+            res.status(404).json({ message: `Could not get category with given id` });
+          };
+        })
+        .catch(err => {
+          res.status(500).json({ message: `Failed to update category`, error: err });
+        });
+    };
   };
 });
 

@@ -70,20 +70,22 @@ router.put('/:conditionId', authenticate, (req, res) => {
 
   if (!process.env.NO_LOGGER) console.log(`TCL: updateCondition(${id})`);
 
-  if (!id > 0 || !conditionData.Condition) {
+  if (!conditionData.Condition) {
     res.status(400).json({ message: `Required data missing` });
   } else {
-    Conditions.updateCondition(id, conditionData)
-      .then(updatedCondition => {
-        if (updatedCondition) {
-          res.status(200).json({ updatedCondition: id });
-        } else {
-          res.status(404).json({ message: `Could not get condition with given id` });
-        };
-      })
-      .catch(err => {
-        res.status(500).json({ message: `Failed to update condition`, error: err });
-      });
+    if (id > 0) {
+      Conditions.updateCondition(id, conditionData)
+        .then(updatedCondition => {
+          if (updatedCondition) {
+            res.status(200).json({ updatedCondition: id });
+          } else {
+            res.status(404).json({ message: `Could not get condition with given id` });
+          };
+        })
+        .catch(err => {
+          res.status(500).json({ message: `Failed to update condition`, error: err });
+        });
+    };
   };
 });
 

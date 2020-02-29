@@ -10,7 +10,6 @@ router.post('/', authenticate, (req, res) => {
   if (!stuffData.Title || !stuffData.category_id || !stuffData.condition_id || !stuffData.PricePerHour || !stuffData.PricePerDay) {
     res.status(400).json({ message: `Required data missing` });
   } else {
-
     if (!stuffData.AddDate) {
       const d = moment();
       stuffData.AddDate = d.format("YYYY-MM-DD HH:mm:ss");
