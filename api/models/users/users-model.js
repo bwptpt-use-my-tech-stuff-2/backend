@@ -9,9 +9,9 @@ module.exports = {
   deleteUser,
 };
 
-function createUser(user) {
+async function createUser(user) {
   if (user) {
-    return db("users")
+    return await db("users")
       .insert(user)
       .then(u => this.readUserById(u[0]));
   } else {
@@ -19,21 +19,21 @@ function createUser(user) {
   };
 };
 
-function readUsers() {
-  return db("users");
+async function readUsers() {
+  return await db("users");
 };
-function readUserById(id) {
+async function readUserById(id) {
   if (id) {
-    return db("users")
+    return await db("users")
       .where("id", id)
       .first();
   } else {
     return null;
   };
 };
-function readUserByEmail(emailAddress) {
+async function readUserByEmail(emailAddress) {
   if (emailAddress) {
-    return db("users")
+    return await db("users")
       .where("Email", emailAddress)
       .first();
   } else {
@@ -41,9 +41,9 @@ function readUserByEmail(emailAddress) {
   };
 };
 
-function updateUser(id, userUpdate) {
+async function updateUser(id, userUpdate) {
   if (id && userUpdate) {
-    return db("users")
+    return await db("users")
       .where("id", id)
       .update(userUpdate)
       .then(count => (count > 0 ? this.readUserById(id) : null));
@@ -52,9 +52,9 @@ function updateUser(id, userUpdate) {
   };
 };
 
-function deleteUser(id) {
+async function deleteUser(id) {
   if (id) {
-    return db("users")
+    return await db("users")
       .where("id", id)
       .del()
       .then(count => (count > 0 ? id : null));

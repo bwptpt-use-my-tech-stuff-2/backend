@@ -9,9 +9,9 @@ module.exports = {
   deleteReview,
 };
 
-function createReview(review) {
+async function createReview(review) {
   if (review) {
-    return db("Reviews")
+    return await db("Reviews")
       .insert(review)
       .then(u => this.readReviewById(u[0]));
   } else {
@@ -19,21 +19,21 @@ function createReview(review) {
   };
 };
 
-function readReviews() {
-  return db("Reviews");
+async function readReviews() {
+  return await db("Reviews");
 };
-function readReviewById(id) {
+async function readReviewById(id) {
   if (id) {
-    return db("Reviews")
+    return await db("Reviews")
       .where("id", id)
       .first();
   } else {
     return null;
   };
 };
-function readReviewByRentalId(rental_id) {
+async function readReviewByRentalId(rental_id) {
   if (rental_id) {
-    return db("Reviews")
+    return await db("Reviews")
       .where("rental_id", rental_id)
       .first();
   } else {
@@ -41,9 +41,9 @@ function readReviewByRentalId(rental_id) {
   };
 };
 
-function updateReview(id, reviewUpdate) {
+async function updateReview(id, reviewUpdate) {
   if (id && reviewUpdate) {
-    return db("Reviews")
+    return await db("Reviews")
       .where("id", id)
       .update(reviewUpdate)
       .then(count => (count > 0 ? this.readReviewById(id) : null));
@@ -52,9 +52,9 @@ function updateReview(id, reviewUpdate) {
   };
 };
 
-function deleteReview(id) {
+async function deleteReview(id) {
   if (id) {
-    return db("Reviews")
+    return await db("Reviews")
       .where("id", id)
       .del()
       .then(count => (count > 0 ? id : null));

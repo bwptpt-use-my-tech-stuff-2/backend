@@ -49,6 +49,7 @@ router.post('/login', jsonParser, (req, res) => {
             const token = jwt.generateToken(user);
             if (!process.env.NO_LOGGER) console.log(`TCL: login -> token\n`, token);
             res.status(200).json({
+              id: user.id,
               message: `Welcome ${user.FirstName}!`,
               token,
             });

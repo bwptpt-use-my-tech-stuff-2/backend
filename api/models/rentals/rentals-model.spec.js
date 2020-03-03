@@ -76,7 +76,7 @@ describe(model, () => {
         const r = random(0, len-1);
         const data1 = data[r];
 
-        const data2 = await Rentals.readRentalById(data[r].id);
+        const data2 = await Rentals.readRentalByRentalId(data[r].id);
 
         expect(data2.id).toEqual(data1.id);
         expect(data2.Title).toEqual(data1.Title);

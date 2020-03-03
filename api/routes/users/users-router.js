@@ -1,5 +1,8 @@
 const router = require('express').Router();
 const Users = require('../../models/users/users-model.js');
+const UserFavoriteStuff = require('../../models/user_favoritestuff/user_favoritestuff-model.js');
+const UserStuff = require('../../models/user_stuff/user_stuff-model.js');
+const Rentals = require('../../models/rentals/rentals-model.js');
 const authenticate = require('../../middleware/auth.js');
 
 router.post('/', authenticate, (req, res) => {
@@ -36,16 +39,31 @@ router.get('/:userRef', authenticate, (req, res) => {
     Users.readUserById(userId)
       .then(user => {
         if (user) {
-          if (!process.env.NO_LOGGER) console.log(`TCL: found:\n`, user);
           //TODO: Merge additional data associated with user
-          // Users.readUserBlahByUserId(user.id)
-          //   .then(userBlah => {
-          //     if (userBlah) {
-          //       newUser = { roles: userBlah, ...user };
-          //       user = newUser;
-          //     }
-          //   });
-          res.status(200).json(user);
+          let u = user;
+          UserFavoriteStuff.readUserFavoriteStuffById(u.id)
+            .then(userFavs => {
+              if (userFavs) {
+                newUserWithFavs = { ...u, favoriteStuff: userFavs };
+                u = newUserWithFavs;
+              };
+              UserStuff.readUserStuffById(u.id)
+                .then(userStuff => {
+                  if (userStuff) {
+                    newUserWithStuff = { ...u, userStuff };
+                    u = newUserWithStuff;
+                  };
+                  Rentals.readRentalsByOwnerId(u.id)
+                    .then(userRentals => {
+                      if (userRentals) {
+                        newUserWithRentals = { ...u, userRentals };
+                        u = newUserWithRentals;
+                      }
+                      if (!process.env.NO_LOGGER) console.log(`TCL: user:\n`, u);
+                      res.status(200).json(u);
+                    });
+                });
+            });
         } else {
           res.status(404).json({ message: `Could not get user with given id` });
         };
@@ -59,16 +77,31 @@ router.get('/:userRef', authenticate, (req, res) => {
     Users.readUserByEmail(email)
       .then(user => {
         if (user) {
-          if (!process.env.NO_LOGGER) console.log(`TCL: found:\n`, user);
           //TODO: Merge additional data associated with user
-          // Users.readUserBlahByUserId(user.id)
-          //   .then(userBlah => {
-          //     if (userBlah) {
-          //       newUser = { roles: userBlah, ...user };
-          //       user = newUser;
-          //     }
-          //   });
-          res.status(200).json(user);
+          let u = user;
+          UserFavoriteStuff.readUserFavoriteStuffById(u.id)
+            .then(userFavs => {
+              if (userFavs) {
+                newUserWithFavs = { ...u, favoriteStuff: userFavs };
+                u = newUserWithFavs;
+              };
+              UserStuff.readUserStuffById(u.id)
+                .then(userStuff => {
+                  if (userStuff) {
+                    newUserWithStuff = { ...u, userStuff };
+                    u = newUserWithStuff;
+                  };
+                  Rentals.readRentalsByOwnerId(u.id)
+                    .then(userRentals => {
+                      if (userRentals) {
+                        newUserWithRentals = { ...u, userRentals };
+                        u = newUserWithRentals;
+                      }
+                      if (!process.env.NO_LOGGER) console.log(`TCL: user:\n`, u);
+                      res.status(200).json(u);
+                    });
+                });
+            });
         } else {
           res.status(404).json({ message: `Could not get user with given email` });
         };

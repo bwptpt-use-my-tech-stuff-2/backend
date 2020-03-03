@@ -1,5 +1,6 @@
 const router = require('express').Router();
 const Rentals = require('../../models/rentals/rentals-model.js');
+const RentalStuff = require('../../models/rental_stuff/rental_stuff-model.js');
 const authenticate = require('../../middleware/auth.js');
 
 router.post('/', authenticate, (req, res) => {
@@ -35,12 +36,20 @@ router.get('/:rentalRef', authenticate, (req, res) => {
   console.log(`TCL: get(/:rentalRef) =`, rentalRef);
   rentalId = parseInt(rentalRef, 10);
   if (rentalId > 0) {
-    if (!process.env.NO_LOGGER) console.log(`TCL: readRentalById(${rentalId})`);
-    Rentals.readRentalById(rentalId)
+    if (!process.env.NO_LOGGER) console.log(`TCL: readRentalByRentalId(${rentalId})`);
+    Rentals.readRentalByRentalId(rentalId)
       .then(rental => {
         if (rental) {
-          if (!process.env.NO_LOGGER) console.log(`TCL: found:\n`, rental);
-          res.status(200).json(rental);
+          let r = rental;
+          RentalStuff.readRentalStuffById(r.id)
+            .then(rentalStuff => {
+              if (rentalStuff) {
+                newRentalWithStuff = { ...r, rentalStuff };
+                r = newRentalWithStuff;
+              }
+              if (!process.env.NO_LOGGER) console.log(`TCL: found:\n`, r);
+              res.status(200).json(r);
+            });
         } else {
           res.status(404).json({ message: `Could not get rental with given id` });
         };
@@ -54,8 +63,16 @@ router.get('/:rentalRef', authenticate, (req, res) => {
     Rentals.readRentalByTitle(rentalTitle)
       .then(rental => {
         if (rental) {
-          if (!process.env.NO_LOGGER) console.log(`TCL: found:\n`, rental);
-          res.status(200).json(rental);
+          let r = rental;
+          RentalStuff.readRentalStuffById(r.id)
+            .then(rentalStuff => {
+              if (rentalStuff) {
+                newRentalWithStuff = { ...r, rentalStuff };
+                r = newRentalWithStuff;
+              }
+              if (!process.env.NO_LOGGER) console.log(`TCL: found:\n`, r);
+              res.status(200).json(r);
+            });
         } else {
           res.status(404).json({ message: `Could not get rental with given name` });
         };

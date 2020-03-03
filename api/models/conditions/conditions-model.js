@@ -9,9 +9,9 @@ module.exports = {
   deleteCondition,
 };
 
-function createCondition(condition) {
+async function createCondition(condition) {
   if (condition) {
-    return db("Conditions")
+    return await db("Conditions")
       .insert(condition)
       .then(u => this.readConditionById(u[0]));
   } else {
@@ -19,21 +19,21 @@ function createCondition(condition) {
   };
 };
 
-function readConditions() {
-  return db("Conditions");
+async function readConditions() {
+  return await db("Conditions");
 };
-function readConditionById(id) {
+async function readConditionById(id) {
   if (id) {
-    return db("Conditions")
+    return await db("Conditions")
       .where("id", id)
       .first();
   } else {
     return null;
   };
 };
-function readConditionByName(conditionName) {
+async function readConditionByName(conditionName) {
   if (conditionName) {
-    return db("Conditions")
+    return await db("Conditions")
       .where("Condition", conditionName)
       .first();
   } else {
@@ -41,9 +41,9 @@ function readConditionByName(conditionName) {
   };
 };
 
-function updateCondition(id, conditionUpdate) {
+async function updateCondition(id, conditionUpdate) {
   if (id && conditionUpdate) {
-    return db("Conditions")
+    return await db("Conditions")
       .where("id", id)
       .update(conditionUpdate)
       .then(count => (count > 0 ? this.readConditionById(id) : null));
@@ -52,9 +52,9 @@ function updateCondition(id, conditionUpdate) {
   };
 };
 
-function deleteCondition(id) {
+async function deleteCondition(id) {
   if (id) {
-    return db("Conditions")
+    return await db("Conditions")
       .where("id", id)
       .del()
       .then(count => (count > 0 ? id : null));

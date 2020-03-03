@@ -9,9 +9,9 @@ module.exports = {
   deleteStuff,
 };
 
-function createStuff(stuff) {
+async function createStuff(stuff) {
   if (stuff) {
-    return db("Stuff")
+    return await db("Stuff")
       .insert(stuff)
       .then(u => this.readStuffById(u[0]));
   } else {
@@ -19,21 +19,21 @@ function createStuff(stuff) {
   };
 };
 
-function readStuff() {
-  return db("Stuff");
+async function readStuff() {
+  return await db("Stuff");
 };
-function readStuffById(id) {
+async function readStuffById(id) {
   if (id) {
-    return db("Stuff")
+    return await db("Stuff")
       .where("id", id)
       .first();
   } else {
     return null;
   };
 };
-function readStuffByTitle(stuffTitle) {
+async function readStuffByTitle(stuffTitle) {
   if (stuffTitle) {
-    return db("Stuff")
+    return await db("Stuff")
       .where("Title", stuffTitle)
       .first();
   } else {
@@ -41,9 +41,9 @@ function readStuffByTitle(stuffTitle) {
   };
 };
 
-function updateStuff(id, stuffUpdate) {
+async function updateStuff(id, stuffUpdate) {
   if (id && stuffUpdate) {
-    return db("Stuff")
+    return await db("Stuff")
       .where("id", id)
       .update(stuffUpdate)
       .then(count => (count > 0 ? this.readStuffById(id) : null));
@@ -52,9 +52,9 @@ function updateStuff(id, stuffUpdate) {
   };
 };
 
-function deleteStuff(id) {
+async function deleteStuff(id) {
   if (id) {
-    return db("Stuff")
+    return await db("Stuff")
       .where("id", id)
       .del()
       .then(count => (count > 0 ? id : null));

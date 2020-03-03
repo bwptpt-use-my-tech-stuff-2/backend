@@ -3,37 +3,47 @@ const db = require('../../../data/dbConfig.js');
 module.exports = {
   createRental,
   readRentals,
-  readRentalById,
+  readRentalsByOwnerId,
+  readRentalByRentalId,
   readRentalByTitle,
   updateRental,
   deleteRental,
 };
 
-function createRental(rental) {
+async function createRental(rental) {
   if (rental) {
-    return db("Rentals")
+    return await db("Rentals")
       .insert(rental)
-      .then(u => this.readRentalById(u[0]));
+      .then(u => this.readRentalByRentalId(u[0]));
   } else {
     return null;
   };
 };
 
-function readRentals() {
-  return db("Rentals");
+async function readRentals() {
+  return await db("Rentals");
 };
-function readRentalById(id) {
-  if (id) {
-    return db("Rentals")
-      .where("id", id)
+async function readRentalsByOwnerId(ownerId) {
+  if (ownerId) {
+    return await db("Rentals")
+      .where("owner_id", ownerId)
+      // .first();
+  } else {
+    return null;
+  };
+};
+async function readRentalByRentalId(rentalId) {
+  if (rentalId) {
+    return await db("Rentals")
+      .where("id", rentalId)
       .first();
   } else {
     return null;
   };
 };
-function readRentalByTitle(rentalTitle) {
+async function readRentalByTitle(rentalTitle) {
   if (rentalTitle) {
-    return db("Rentals")
+    return await db("Rentals")
       .where("Title", rentalTitle)
       .first();
   } else {
@@ -41,20 +51,20 @@ function readRentalByTitle(rentalTitle) {
   };
 };
 
-function updateRental(id, rentalUpdate) {
+async function updateRental(id, rentalUpdate) {
   if (id && rentalUpdate) {
-    return db("Rentals")
+    return await db("Rentals")
       .where("id", id)
       .update(rentalUpdate)
-      .then(count => (count > 0 ? this.readRentalById(id) : null));
+      .then(count => (count > 0 ? this.readRentalByRentalId(id) : null));
   } else {
     return null;
   };
 };
 
-function deleteRental(id) {
+async function deleteRental(id) {
   if (id) {
-    return db("Rentals")
+    return await db("Rentals")
       .where("id", id)
       .del()
       .then(count => (count > 0 ? id : null));

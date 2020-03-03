@@ -9,9 +9,9 @@ module.exports = {
   deleteCategory,
 };
 
-function createCategory(category) {
+async function createCategory(category) {
   if (category) {
-    return db("Categories")
+    return await db("Categories")
       .insert(category)
       .then(u => this.readCategoryById(u[0]));
   } else {
@@ -19,21 +19,21 @@ function createCategory(category) {
   };
 };
 
-function readCategories() {
-  return db("Categories");
+async function readCategories() {
+  return await db("Categories");
 };
-function readCategoryById(id) {
+async function readCategoryById(id) {
   if (id) {
-    return db("Categories")
+    return await db("Categories")
       .where("id", id)
       .first();
   } else {
     return null;
   };
 };
-function readCategoryByName(categoryName) {
+async function readCategoryByName(categoryName) {
   if (categoryName) {
-    return db("Categories")
+    return await db("Categories")
       .where("Category", categoryName)
       .first();
   } else {
@@ -41,9 +41,9 @@ function readCategoryByName(categoryName) {
   };
 };
 
-function updateCategory(id, categoryUpdate) {
+async function updateCategory(id, categoryUpdate) {
   if (id && categoryUpdate) {
-    return db("Categories")
+    return await db("Categories")
       .where("id", id)
       .update(categoryUpdate)
       .then(count => (count > 0 ? this.readCategoryById(id) : null));
@@ -52,9 +52,9 @@ function updateCategory(id, categoryUpdate) {
   };
 };
 
-function deleteCategory(id) {
+async function deleteCategory(id) {
   if (id) {
-    return db("Categories")
+    return await db("Categories")
       .where("id", id)
       .del()
       .then(count => (count > 0 ? id : null));
