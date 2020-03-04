@@ -1,4 +1,5 @@
 const router = require('express').Router();
+const emailValidator = require('email-validator');
 const bcrypt = require('bcryptjs');
 const jwt = require('../../middleware/jwt.js');
 const bodyParser = require('body-parser');
@@ -6,6 +7,7 @@ const jsonParser = bodyParser.json();
 
 const Users = require('../../models/users/users-model.js');
 
+const minPasswordLength = 8;
 const passwordStrength = 12;
 
 router.post('/register', jsonParser, (req, res) => {
@@ -14,6 +16,12 @@ router.post('/register', jsonParser, (req, res) => {
 
   if (!userData.Email || !userData.Password) {
     res.status(400).json({ message: `Required data missing` });
+  } else if (Users.readUserByEmail(userData.Email)) {
+    res.status(400).json({ message: `Email address provided is already registered! Please login as that user to proceed or register with a different address.` });
+  } else if (!emailValidator.validate(userData.Email)) {
+    res.status(400).json({ message: `Email address provided appears to be invalid! Please check and try again.` });
+  } else if (userData.Password.length < minPasswordLength) {
+    res.status(400).json({ message: `Password provided is too short! Please provide a password as least ${minPasswordLength} characters long.` });
   } else {
     const hash = bcrypt.hashSync(userData.Password, passwordStrength);
     if (!process.env.NO_LOGGER) console.log(`TCL: register -> hash =`, hash);
