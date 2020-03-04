@@ -5,6 +5,9 @@ const UserStuff = require('../../models/user_stuff/user_stuff-model.js');
 const Rentals = require('../../models/rentals/rentals-model.js');
 const authenticate = require('../../middleware/auth.js');
 
+const bcrypt = require('bcryptjs');
+const passwordStrength = 12;
+
 router.post('/', authenticate, (req, res) => {
   const userData = req.body;
 
@@ -123,6 +126,9 @@ router.put('/:userId', authenticate, (req, res) => {
     res.status(400).json({ message: `Required data missing` });
   } else {
     if (id > 0) {
+      if (userData.Password != undefined) {
+        userData.Password = bcrypt.hashSync(userData.Password, passwordStrength);
+      };
       Users.updateUser(id, userData)
         .then(removedUser => {
           if (removedUser) {
