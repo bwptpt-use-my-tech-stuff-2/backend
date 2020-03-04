@@ -4,6 +4,7 @@ module.exports = {
   createRental,
   readRentals,
   readRentalsByOwnerId,
+  readRentalsByRenterId,
   readRentalByRentalId,
   readRentalByTitle,
   updateRental,
@@ -27,7 +28,14 @@ async function readRentalsByOwnerId(ownerId) {
   if (ownerId) {
     return await db("Rentals")
       .where("owner_id", ownerId)
-      // .first();
+  } else {
+    return null;
+  };
+};
+async function readRentalsByRenterId(renterId) {
+  if (renterId) {
+    return await db("Rentals")
+      .where("renter_id", renterId)
   } else {
     return null;
   };

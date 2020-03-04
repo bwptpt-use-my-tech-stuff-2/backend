@@ -57,13 +57,20 @@ router.get('/:userRef', authenticate, (req, res) => {
                     u = newUserWithStuff;
                   };
                   Rentals.readRentalsByOwnerId(u.id)
-                    .then(userRentals => {
-                      if (userRentals) {
-                        newUserWithRentals = { ...u, userRentals };
-                        u = newUserWithRentals;
-                      }
-                      if (!process.env.NO_LOGGER) console.log(`TCL: user:\n`, u);
-                      res.status(200).json(u);
+                    .then(userRentalsAsOwner => {
+                      if (userRentalsAsOwner) {
+                        newUserWithRentalsAsOwner = { ...u, userRentalsAsOwner: userRentalsAsOwner };
+                        u = newUserWithRentalsAsOwner;
+                      };
+                      Rentals.readRentalsByRenterId(u.id)
+                        .then(userRentalsAsRenter => {
+                          if(userRentalsAsRenter) {
+                            newUserWithRentalsAsRenter = { ...u, userRentalsAsRenter: userRentalsAsRenter };
+                            u = newUserWithRentalsAsRenter;
+                          };
+                          if (!process.env.NO_LOGGER) console.log(`TCL: user:\n`, u);
+                          res.status(200).json(u);
+                        });
                     });
                 });
             });
