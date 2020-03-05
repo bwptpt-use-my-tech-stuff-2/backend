@@ -5,14 +5,12 @@ const authenticate = require('../../middleware/auth.js');
 router.post('/', authenticate, (req, res) => {
   const rentalStuffData = req.body;
 
-  if (!rentalStuffData.rental_id || !rentalStuffData.stuff_id) {
+  if (!rentalStuffData.rental_id || !rentalStuffData.stuff_id || !rentalStuffData.PricePerHour || !rentalStuffData.PricePerDay) {
     res.status(400).json({ message: `Required data missing` });
   } else {
-    if (!rentalStuffData.Paid) rentalStuffData.Paid = false;
-    if (!rentalStuffData.Returned) rentalStuffData.Returned = false;
-
     RentalStuff.createRentalStuff(rentalStuffData)
       .then(addedRentalStuff => {
+        console.log(`addedRentalStuff`, addedRentalStuff);
         res.status(201).json(addedRentalStuff);
       })
       .catch(err => {
@@ -30,13 +28,13 @@ router.get('/', authenticate, (req, res) => {
       res.status(500).json({ message: `Failed to get rental_stuff` });
     });
 });
-router.get('/:rentalStuffRef', authenticate, (req, res) => {
-  const { rentalStuffRef } = req.params;
-  console.log(`TCL: get(/:rentalStuffRef) =`, rentalStuffRef);
-  rentalStuffId = parseInt(rentalStuffRef, 10);
-  if (rentalStuffId > 0) {
-    if (!process.env.NO_LOGGER) console.log(`TCL: readRentalStuffById(${rentalStuffId})`);
-    RentalStuff.readRentalStuffById(rentalStuffId)
+router.get('/:rentalRef', authenticate, (req, res) => {
+  const { rentalRef } = req.params;
+  console.log(`TCL: get(/:rentalRef) =`, rentalRef);
+  rentalId = parseInt(rentalRef, 10);
+  if (rentalId > 0) {
+    if (!process.env.NO_LOGGER) console.log(`TCL: readRentalStuffByIds(${rentalId})`);
+    RentalStuff.readRentalStuffByRentalId(rentalId)
       .then(rentalStuff => {
         if (rentalStuff) {
           if (!process.env.NO_LOGGER) console.log(`TCL: found:\n`, rentalStuff);
@@ -51,23 +49,24 @@ router.get('/:rentalStuffRef', authenticate, (req, res) => {
   };
 });
 
-router.put('/:rentalStuffId', authenticate, (req, res) => {
-  const { rentalStuffId } = req.params;
-  const id = parseInt(rentalStuffId, 10);
-  const rentalStuffData = req.body;
+router.put('/:rentalId/:stuffId', authenticate, (req, res) => {
+  const { rentalId, stuffId } = req.params;
+  const rId = parseInt(rentalId, 10);
+  const sId = parseInt(stuffId, 10);
+  const rentalData = req.body;
 
-  if (!process.env.NO_LOGGER) console.log(`TCL: updateRentalStuff(${id})`);
+  if (!process.env.NO_LOGGER) console.log(`TCL: updateRentalStuff(${rId}, ${sId})`);
 
-  if (!rentalStuffData.PricePerHour && !rentalStuffData.PricePerDay && !rentalStuffData.PickupCondition && !rentalStuffData.ReturnCondition) {
+  if (!rentalData.PricePerHour && !rentalData.PricePerDay && !rentalData.PickupCondition && !rentalData.ReturnCondition) {
     res.status(400).json({ message: `Required data missing` });
   } else {
-    if (id > 0) {
-      RentalStuff.updateRentalStuff(id, rentalStuffData)
+    if (rId > 0 && sId > 0) {
+      RentalStuff.updateRentalStuff(rId, sId, rentalData)
         .then(updatedRentalStuff => {
           if (updatedRentalStuff) {
-            res.status(200).json({ updatedRentalStuff: id });
+            res.status(200).json({ updatedRentalStuff: sId });
           } else {
-            res.status(404).json({ message: `Could not get rental stuff with given id` });
+            res.status(404).json({ message: `Could not get rental stuff with given ids` });
           };
         })
         .catch(err => {
@@ -77,17 +76,18 @@ router.put('/:rentalStuffId', authenticate, (req, res) => {
   };
 });
 
-router.delete('/:rentalStuffId', authenticate, (req, res) => {
-  const { rentalStuffId } = req.params;
-  const uId = parseInt(rentalStuffId, 10);
-  if (!process.env.NO_LOGGER) console.log(`TCL: deleteRentalStuff(${uId})`);
-  if (uId > 0) {
-    RentalStuff.deleteRentalStuff(uId)
+router.delete('/:rentalId/:stuffId', authenticate, (req, res) => {
+  const { rentalId, stuffId } = req.params;
+  const rId = parseInt(rentalId, 10);
+  const sId = parseInt(stuffId, 10);
+  if (!process.env.NO_LOGGER) console.log(`TCL: deleteRentalStuff(${rId}, ${sId})`);
+  if (rId > 0 && sId > 0) {
+    RentalStuff.deleteRentalStuff(rId, sId)
       .then(removedRentalStuff => {
         if (removedRentalStuff) {
-          res.status(200).json({ removedRentalStuff: uId });
+          res.status(200).json({ removedRentalStuff: sId });
         } else {
-          res.status(404).json({ message: `Could not get rental stuff with given id` });
+          res.status(404).json({ message: `Could not get rental stuff with given ids` });
         };
       })
       .catch(err => {

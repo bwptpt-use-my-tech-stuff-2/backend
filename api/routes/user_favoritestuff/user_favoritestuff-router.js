@@ -4,15 +4,14 @@ const authenticate = require('../../middleware/auth.js');
 
 router.post('/', authenticate, (req, res) => {
   const userFavoriteStuffData = req.body;
+  console.log(`userFavoriteStuffData`, userFavoriteStuffData);
 
   if (!userFavoriteStuffData.user_id || !userFavoriteStuffData.stuff_id) {
     res.status(400).json({ message: `Required data missing` });
   } else {
-    if (!userFavoriteStuffData.Paid) userFavoriteStuffData.Paid = false;
-    if (!userFavoriteStuffData.Returned) userFavoriteStuffData.Returned = false;
-
     UserFavoriteStuff.createUserFavoriteStuff(userFavoriteStuffData)
       .then(addedUserFavoriteStuff => {
+        console.log(`addedUserFavoriteStuff`, addedUserFavoriteStuff);
         res.status(201).json(addedUserFavoriteStuff);
       })
       .catch(err => {
@@ -35,8 +34,8 @@ router.get('/:userFavoriteStuffRef', authenticate, (req, res) => {
   console.log(`TCL: get(/:userFavoriteStuffRef) =`, userFavoriteStuffRef);
   userFavoriteStuffId = parseInt(userFavoriteStuffRef, 10);
   if (userFavoriteStuffId > 0) {
-    if (!process.env.NO_LOGGER) console.log(`TCL: readUserFavoriteStuffById(${userFavoriteStuffId})`);
-    UserFavoriteStuff.readUserFavoriteStuffById(userFavoriteStuffId)
+    if (!process.env.NO_LOGGER) console.log(`TCL: readUserFavoriteStuffByUserId(${userFavoriteStuffId})`);
+    UserFavoriteStuff.readUserFavoriteStuffByUserId(userFavoriteStuffId)
       .then(userFavoriteStuff => {
         if (userFavoriteStuff) {
           if (!process.env.NO_LOGGER) console.log(`TCL: found:\n`, userFavoriteStuff);
@@ -51,43 +50,18 @@ router.get('/:userFavoriteStuffRef', authenticate, (req, res) => {
   };
 });
 
-// router.put('/:userFavoriteStuffId', authenticate, (req, res) => {
-//   const { userFavoriteStuffId } = req.params;
-//   const id = parseInt(userFavoriteStuffId, 10);
-//   const userFavoriteStuffData = req.body;
-
-//   if (!process.env.NO_LOGGER) console.log(`TCL: updateUserFavoriteStuff(${id})`);
-
-//   if (!userFavoriteStuffData.user_id && !userFavoriteStuffData.stuff_id) {
-//     res.status(400).json({ message: `Required data missing` });
-//   } else {
-//     if (id > 0) {
-//       UserFavoriteStuff.updateUserFavoriteStuff(id, userFavoriteStuffData)
-//         .then(updatedUserFavoriteStuff => {
-//           if (updatedUserFavoriteStuff) {
-//             res.status(200).json({ updatedUserFavoriteStuff: id });
-//           } else {
-//             res.status(404).json({ message: `Could not get user favorite stuff with given id` });
-//           };
-//         })
-//         .catch(err => {
-//           res.status(500).json({ message: `Failed to update user favorite stuff`, error: err });
-//         });
-//     };
-//   };
-// });
-
-router.delete('/:userFavoriteStuffId', authenticate, (req, res) => {
-  const { userFavoriteStuffId } = req.params;
-  const uId = parseInt(userFavoriteStuffId, 10);
-  if (!process.env.NO_LOGGER) console.log(`TCL: deleteUserFavoriteStuff(${uId})`);
-  if (uId > 0) {
-    UserFavoriteStuff.deleteUserFavoriteStuff(uId)
+router.delete('/:userId/:stuffId', authenticate, (req, res) => {
+  const { userId, stuffId } = req.params;
+  const uId = parseInt(userId, 10);
+  const sId = parseInt(stuffId, 10);
+  if (!process.env.NO_LOGGER) console.log(`TCL: deleteUserFavoriteStuff(${uId}, ${sId})`);
+  if (uId > 0 && sId > 0) {
+    UserFavoriteStuff.deleteUserFavoriteStuff(uId, sId)
       .then(removedUserFavoriteStuff => {
         if (removedUserFavoriteStuff) {
-          res.status(200).json({ removedUserFavoriteStuff: uId });
+          res.status(200).json({ removedUserFavoriteStuff: sId });
         } else {
-          res.status(404).json({ message: `Could not get user favorite stuff with given id` });
+          res.status(404).json({ message: `Could not get user favorite stuff with given ids` });
         };
       })
       .catch(err => {

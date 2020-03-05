@@ -42,15 +42,14 @@ router.get('/:userRef', authenticate, (req, res) => {
     Users.readUserById(userId)
       .then(user => {
         if (user) {
-          //TODO: Merge additional data associated with user
           let u = user;
-          UserFavoriteStuff.readUserFavoriteStuffById(u.id)
+          UserFavoriteStuff.readUserFavoriteStuffByUserId(u.id)
             .then(userFavs => {
               if (userFavs) {
                 newUserWithFavs = { ...u, favoriteStuff: userFavs };
                 u = newUserWithFavs;
               };
-              UserStuff.readUserStuffById(u.id)
+              UserStuff.readUserStuffByIds(u.id)
                 .then(userStuff => {
                   if (userStuff) {
                     newUserWithStuff = { ...u, userStuff };
@@ -87,28 +86,34 @@ router.get('/:userRef', authenticate, (req, res) => {
     Users.readUserByEmail(email)
       .then(user => {
         if (user) {
-          //TODO: Merge additional data associated with user
           let u = user;
-          UserFavoriteStuff.readUserFavoriteStuffById(u.id)
+          UserFavoriteStuff.readUserFavoriteStuffByUserId(u.id)
             .then(userFavs => {
               if (userFavs) {
                 newUserWithFavs = { ...u, favoriteStuff: userFavs };
                 u = newUserWithFavs;
               };
-              UserStuff.readUserStuffById(u.id)
+              UserStuff.readUserStuffByIds(u.id)
                 .then(userStuff => {
                   if (userStuff) {
                     newUserWithStuff = { ...u, userStuff };
                     u = newUserWithStuff;
                   };
                   Rentals.readRentalsByOwnerId(u.id)
-                    .then(userRentals => {
-                      if (userRentals) {
-                        newUserWithRentals = { ...u, userRentals };
-                        u = newUserWithRentals;
-                      }
-                      if (!process.env.NO_LOGGER) console.log(`TCL: user:\n`, u);
-                      res.status(200).json(u);
+                    .then(userRentalsAsOwner => {
+                      if (userRentalsAsOwner) {
+                        newUserWithRentalsAsOwner = { ...u, userRentalsAsOwner: userRentalsAsOwner };
+                        u = newUserWithRentalsAsOwner;
+                      };
+                      Rentals.readRentalsByRenterId(u.id)
+                        .then(userRentalsAsRenter => {
+                          if(userRentalsAsRenter) {
+                            newUserWithRentalsAsRenter = { ...u, userRentalsAsRenter: userRentalsAsRenter };
+                            u = newUserWithRentalsAsRenter;
+                          };
+                          if (!process.env.NO_LOGGER) console.log(`TCL: user:\n`, u);
+                          res.status(200).json(u);
+                        });
                     });
                 });
             });

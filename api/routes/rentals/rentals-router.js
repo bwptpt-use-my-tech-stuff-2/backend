@@ -41,7 +41,7 @@ router.get('/:rentalRef', authenticate, (req, res) => {
       .then(rental => {
         if (rental) {
           let r = rental;
-          RentalStuff.readRentalStuffById(r.id)
+          RentalStuff.readRentalStuffByIds(r.id)
             .then(rentalStuff => {
               if (rentalStuff) {
                 newRentalWithStuff = { ...r, rentalStuff };
@@ -64,7 +64,7 @@ router.get('/:rentalRef', authenticate, (req, res) => {
       .then(rental => {
         if (rental) {
           let r = rental;
-          RentalStuff.readRentalStuffById(r.id)
+          RentalStuff.readRentalStuffByIds(r.id)
             .then(rentalStuff => {
               if (rentalStuff) {
                 newRentalWithStuff = { ...r, rentalStuff };
