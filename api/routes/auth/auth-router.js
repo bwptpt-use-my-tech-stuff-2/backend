@@ -16,8 +16,6 @@ router.post('/register', jsonParser, (req, res) => {
 
   if (!userData.Email || !userData.Password) {
     res.status(400).json({ message: `Required data missing` });
-  } else if (Users.readUserByEmail(userData.Email)) {
-    res.status(400).json({ message: `Email address provided is already registered! Please login as that user to proceed or register with a different address.` });
   } else if (!emailValidator.validate(userData.Email)) {
     res.status(400).json({ message: `Email address provided appears to be invalid! Please check and try again.` });
   } else if (userData.Password.length < minPasswordLength) {
