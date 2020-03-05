@@ -10,7 +10,7 @@ const Users = require('../../models/users/users-model.js');
 const minPasswordLength = 8;
 const passwordStrength = 12;
 
-router.post('/register', jsonParser, (req, res) => {
+router.post('/register', jsonParser, async (req, res) => {
   let userData = req.body;
   if (!process.env.NO_LOGGER) console.log(`TCL: register -> user\n`, userData);
 
@@ -21,23 +21,32 @@ router.post('/register', jsonParser, (req, res) => {
   } else if (userData.Password.length < minPasswordLength) {
     res.status(400).json({ message: `Password provided is too short! Please provide a password as least ${minPasswordLength} characters long.` });
   } else {
-    const hash = bcrypt.hashSync(userData.Password, passwordStrength);
-    if (!process.env.NO_LOGGER) console.log(`TCL: register -> hash =`, hash);
-    
-    userData.Password = hash;
+    await Users.readUserByEmail(userData.Email)
+      .then(async (e) => {
+        console.log(`e`, e);
+        if(e && e.Email == userData.Email) {
+          console.log(`2`);
+          res.status(400).json({ message: `Email address provided is already registered! Please login as that user to proceed or register with a different address.` });
+        } else {
+          const hash = bcrypt.hashSync(userData.Password, passwordStrength);
+          if (!process.env.NO_LOGGER) console.log(`TCL: register -> hash =`, hash);
 
-    Users.createUser(userData)
-      .then(saved => {
-        res.status(201).json(saved);
-      })
-      .catch(err => {
-        if (!process.env.NO_LOGGER) console.log(`TCL: register -> err\n`, err);
-        res.status(500).json(err);
+          userData.Password = hash;
+
+          await Users.createUser(userData)
+            .then(saved => {
+              res.status(201).json(saved);
+            })
+            .catch(err => {
+              if (!process.env.NO_LOGGER) console.log(`TCL: register -> err\n`, err);
+              res.status(500).json(err);
+            });
+        };
       });
   };
 });
 
-router.post('/login', jsonParser, (req, res) => {
+router.post('/login', jsonParser, async (req, res) => {
   let userData = req.body;
   if (!process.env.NO_LOGGER) console.log(`TCL: login -> user input\n`, userData);
 
@@ -45,8 +54,8 @@ router.post('/login', jsonParser, (req, res) => {
     res.status(400).json({ message: `Required data missing` });
   } else {
     email = userData.Email;
-    Users.readUserByEmail(email)
-      .then(user => {
+    await Users.readUserByEmail(email)
+      .then(async (user) => {
         if (!process.env.NO_LOGGER) console.log(`TCL: login -> user found\n`, user);
         if (user) {
           const b = bcrypt.compareSync(userData.Password, user.Password);
