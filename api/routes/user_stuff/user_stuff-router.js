@@ -51,32 +51,6 @@ router.get('/:userStuffRef', authenticate, (req, res) => {
   };
 });
 
-// router.put('/:userStuffId', authenticate, (req, res) => {
-//   const { userStuffId } = req.params;
-//   const id = parseInt(userStuffId, 10);
-//   const userStuffData = req.body;
-
-//   if (!process.env.NO_LOGGER) console.log(`TCL: updateUserStuff(${id})`);
-
-//   if (!userStuffData.user_id && !userStuffData.stuff_id) {
-//     res.status(400).json({ message: `Required data missing` });
-//   } else {
-//     if (id > 0) {
-//       UserStuff.updateUserStuff(id, userStuffData)
-//         .then(updatedUserStuff => {
-//           if (updatedUserStuff) {
-//             res.status(200).json({ updatedUserStuff: id });
-//           } else {
-//             res.status(404).json({ message: `Could not get user stuff with given id` });
-//           };
-//         })
-//         .catch(err => {
-//           res.status(500).json({ message: `Failed to update user stuff`, error: err });
-//         });
-//     };
-//   };
-// });
-
 router.delete('/:userStuffId', authenticate, (req, res) => {
   const { userStuffId } = req.params;
   const uId = parseInt(userStuffId, 10);
