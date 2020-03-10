@@ -23,9 +23,8 @@ router.post('/register', jsonParser, async (req, res) => {
   } else {
     await Users.readUserByEmail(userData.Email)
       .then(async (e) => {
-        console.log(`e`, e);
+        if (!process.env.NO_LOGGER) console.log(`User email already registered?`, e !== undefined);
         if(e && e.Email == userData.Email) {
-          console.log(`2`);
           res.status(400).json({ message: `Email address provided is already registered! Please login as that user to proceed or register with a different address.` });
         } else {
           const hash = bcrypt.hashSync(userData.Password, passwordStrength);

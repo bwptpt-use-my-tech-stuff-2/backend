@@ -29,7 +29,7 @@ describe('auth-router', () => {
     it('(valid)', async (done) => {
       const password = "T3$tP4$$w0rd!";
       const reqBody = {
-        Email: `TestUser_${d}`,
+        Email: `TestUser_${d}@example.com`,
         Password: password,
         FirstName: 'Test',
         LastName: 'User',
@@ -37,7 +37,7 @@ describe('auth-router', () => {
       };
       const expStatus = 201;
       const resBody = {
-        Email: `TestUser_${d}`,
+        Email: `TestUser_${d}@example.com`,
         FirstName: 'Test',
         LastName: 'User',
         Location: '',
@@ -78,7 +78,7 @@ describe('auth-router', () => {
     });
 
     it('(valid)', async (done) => {
-      const u = `TestUser_${d}`;
+      const u = `TestUser_${d}@example.com`;
       const p = "T3$tP4$$w0rd!";
       const f = "Test";
 
